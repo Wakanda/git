@@ -4,15 +4,6 @@
 		"version": "1.0.0",
 		"description": "Git integration",
 		"icon": "icon.png",
-		"senders": [
-            {
-				"actionName" : "open",
-				"title"   : "Git",
-				"location": "studioToolbar",
-                "icon"    : "icon.png",
-				"tips"    : "Open Git Tab"
-			}
-        ],
 		"actions": [
 			{
 				"name"    : "open",
