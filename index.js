@@ -516,8 +516,6 @@ function getGitPath(){
 exports.handleMessage = function handleMessage(message){
     var action      = message.action;
     if( action ) {
-		studio.log("Action : " + action);
-		
         var result = Git[action](message.params);
 		
 		if(result && result.error){
