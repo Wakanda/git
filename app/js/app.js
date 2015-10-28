@@ -45,6 +45,12 @@ app.factory('git', function() {
 	  });
   };
   
+  service.revertAll = function( fn){
+	  callbacks.push(fn);
+	  
+	  runCommand("revertAll");
+  };
+  
   service.commit = function(message, fn){
 	  callbacks.push(fn);
 	  
@@ -113,7 +119,9 @@ app.factory('git', function() {
   service.getBranches = function(fn){
 	  callbacks.push(fn);
 	  
-	  runCommand("getBranches");
+	  runCommand("getBranches",{
+		  "async" : true
+	  });
   };
   
   return service;
@@ -134,7 +142,7 @@ app.controller("mainViewController", ["$scope", "git", function($scope, git){
 	$scope.localBranch   = "";
 	$scope.remoteBranch  = "";
 	
-	$scope.getStatus = function(){
+	$scope.getStatus = function(fn){
 		git.status(function(result){
 			
 			if(result && result.error){
@@ -165,6 +173,10 @@ app.controller("mainViewController", ["$scope", "git", function($scope, git){
 			
 			status && getElementsFrom("index", $scope.stage);
 			status && getElementsFrom("workingTree", $scope.workingTree);
+			
+			if($scope.viewRemotes){
+				$scope.getRemotes();
+			}
 		});
 	};
 	
@@ -190,6 +202,19 @@ app.controller("mainViewController", ["$scope", "git", function($scope, git){
 	$scope.revertFile = function(file){
 		if(confirm("If you proceed you will lose the changes to the selected file")){
 			git.revertFile(file, function(){
+				$scope.getStatus();
+			});
+		}		
+	};
+	
+	$scope.revertAll = function(){
+		if($scope.stage.length > 0){
+			alert("You need to commit or unstage your staged changes first");
+			return;
+		}
+		
+		if(confirm("If you proceed you will lose all your changes")){
+			git.revertAll(function(){
 				$scope.getStatus();
 			});
 		}		
@@ -305,10 +330,10 @@ app.controller("mainViewController", ["$scope", "git", function($scope, git){
 				return;
 			}
 			
-			$scope.branches      = result.data.all;
-			$scope.currentBranch = result.data.current;
+			$scope.branches      = result.data.branches;
+			$scope.currentBranch = result.data.currentBranch;
 			
-			$scope.localBranch = $scope.remoteBranch = result.data.current;
+			$scope.localBranch = $scope.remoteBranch = result.data.currentBranch;
 		});
 	};
 	
@@ -354,9 +379,9 @@ function runCommand(command, params){
 	if(params){
 		strParams = JSON.stringify(params);
 		base64json = btoa(strParams); // bota() is only available on webviews.
-		studioAction = "wakanda-git." + command + "." + base64json;
+		studioAction = "git." + command + "." + base64json;
 	} else {
-		studioAction = "wakanda-git." + command;
+		studioAction = "git." + command;
 	}	
 	
 	studio.setPreferences("git.done", "false");

@@ -5,6 +5,7 @@ var commands    = {
 	"commit"       : 'commit -m "{{message}}"', //added to UI
 	"addFile"      : 'add "{{file}}"', //added to UI
 	"revertFile"   : 'checkout "{{file}}"', //added to UI
+	"revertAll"    : 'checkout --force', //added to UI
 	"unstageFile"  : 'reset -- "{{file}}"', //added to UI
 	"unstageAll"   : 'reset', //added to UI
 	"addAll"       : "add -A", //added to UI
@@ -20,6 +21,7 @@ var commands    = {
 	"changeBranch" : 'checkout "{{branch}}"',
 	"deleteBranch" : 'branch -d "{{branch}}"'
 };
+var sync       = false;
 var errors     = {
 	"NOTGIT" : "NOTGIT"
 };
@@ -105,7 +107,14 @@ Git.runGitAction = function(options){
 		studio.log(data);
 		studio.log(error);
 		
-		sendResponse(response);
+		if(sync){
+			exitWait();			
+			studio.extension.sendDataToWakandaStudio('git.getGitBranchNames', response.data);
+			sync = false;
+		} else{
+			sendResponse(response);
+		}
+		
 	};
 	
 	var result = Git.runCommand({
@@ -147,7 +156,22 @@ Git.getRemotes = function(){
 	return result;
 };
 
-Git.getBranches = function(){
+Git.isGitRepository = Git.isGitReadyForCurrentSolution = function(){
+	studio.extension.sendDataToWakandaStudio('git.isGitReadyForCurrentSolution', isGitRepository());
+};
+
+Git.changeBranch = Git.gitSwitchBranch = function(){
+	var branch = studio.extension.getDataFromWakandaStudio('git.gitSwitchBranch');
+	
+	var result = Git.runGitAction({
+		"action" : "changeBranch",
+		"params" : {
+			"branch" : branch
+		}
+	});
+};
+
+Git.getBranches = Git.getGitBranchNames = function(params){
 	if(!isGitRepository()){
 		return errorMessage("NOTGIT");
 	}
@@ -155,6 +179,11 @@ Git.getBranches = function(){
 	var result = Git.runGitAction({
 		"action" : "getBranches"
 	});
+	
+	if(!params || typeof params.async === "undefined"){
+		sync = true;
+		wait(2000);
+	}
 	
 	return result;
 };
@@ -208,6 +237,18 @@ Git.revertFile = function(params){
 		"params" : {
 			"file" : params.file
 		}
+	});
+	
+	return result;
+};
+
+Git.revertAll = function(params){
+	if(!isGitRepository()){
+		return errorMessage("NOTGIT");
+	}
+	
+	var result = Git.runGitAction({
+		"action" : "revertAll"
 	});
 	
 	return result;
@@ -475,6 +516,8 @@ function getGitPath(){
 exports.handleMessage = function handleMessage(message){
     var action      = message.action;
     if( action ) {
+		studio.log("Action : " + action);
+		
         var result = Git[action](message.params);
 		
 		if(result && result.error){
@@ -533,8 +576,8 @@ actionsParsers.getRemotes = function(data){
 };
 
 actionsParsers.getBranches = function(data){
-	var branches = {};
-	branches.all = [];
+	var result = {};
+	result.branches = [];
 	
 	var lines = data.split("\n");
 	
@@ -547,12 +590,12 @@ actionsParsers.getBranches = function(data){
 		
 		if(line.indexOf("*") === 0){
 			name = line.split(/\s/)[1]; //assert ?
-			branches.current = name;
-			branches.all.push(name);
+			result.currentBranch = name;
+			result.branches.push(name);
 		} else {
-			branches.all.push(line);
+			result.branches.push(line);
 		}		
 	});
 	
-	return branches;
+	return result;
 };
