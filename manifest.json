@@ -1,0 +1,33 @@
+{
+	"extension": {
+		"name": "wakanda-git",
+		"version": "1.0.0",
+		"description": "Git integration",
+		"icon": "icon.png",
+		"senders": [
+            {
+				"actionName" : "open",
+				"title"   : "Git",
+				"location": "studioToolbar",
+                "icon"    : "icon.png",
+				"tips"    : "Open Git Tab"
+			}
+        ],
+		"actions": [
+			{
+				"name"    : "open",
+				"title"   : "open"
+			},
+			{
+				"name": "status",
+				"title": "status"
+			},
+            {
+                "name": "onSolutionOpened",
+                "title": "onSolutionOpened",
+                "trigger": [ { "event": "onSolutionOpened" } ]
+            }
+		],
+		"lifetime": "application_lifetime"
+	}	
+}

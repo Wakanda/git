@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="gitapp">
+<head>
+	<meta charset="UTF-8">
+	<title>Git</title>
+	<script src="./lib/angular.min.js"></script>
+	<script src="./app/js/app.js"></script>
+	<link rel="stylesheet" href="./app/styles/app.css">
+</head>
+<body ng-controller="mainViewController">
+	<div class="header">
+		<div class="element-controls float-right">
+			<ul>
+				<li><a class="btn btn-refresh" ng-click="getStatus()"></a></li>
+			</ul>
+		</div>
+		<img ng-show="busy" src="./app/styles/images/loader.gif">
+		<div class="remote_switch" ng-hide="noGit">
+			<input type="checkbox" id="" ng-model="viewRemotes"/> Remotes
+		</div>
+	</div>
+	<div class="area-notgit" ng-show="noGit">
+		<button id="btnInit" class="take-all-width" ng-click="init()">Create Git Repository</button>
+	</div>
+	<div class="area-git" ng-hide="noGit">
+		
+		<!-- Remotes -->
+		<div class="area area-remotes block" ng-show="viewRemotes">
+			
+			<!-- Area Barre -->
+			<div class="element block take-all-width">
+				<span class="area-title">
+					Remotes
+				</span>
+				<div class="element-controls float-right">
+					<ul>
+						<li><a class="btn btn-add"  ng-click="toggleAddRemote()"></a></li>
+					</ul>		
+				</div>
+			</div>
+			
+			<!-- Add New Remote -->
+			<div class="block take-all-width " ng-show="viewAddRemote">
+				<div class="block take-all-width">
+					<span class="label block">Name </span>
+					<input type="text" id="addRemoteFirstInput" class="take-all-width" ng-model="newRemoteName"/>
+				</div>				
+				<div class="block take-all-width">
+					<span class="label block">URL </span>
+					<input type="text" class="take-all-width" ng-model="newRemoteURL"/>
+				</div>
+				<div class="block take-all-width">
+					<span class="label block">Username </span>
+					<input type="text" class="take-all-width" ng-model="newRemoteUser"/>
+				</div>
+				<div class="block take-all-width">
+					<span class="label block">Password </span>
+					<input type="password" class="take-all-width" ng-model="newRemotePassword"/>
+				</div>
+				<button class="take-all-width" ng-click="toggleAddRemote()">Cancel</button>
+				<button class="take-all-width" ng-click="addRemote(newRemoteName, newRemoteURL, newRemoteUser, newRemotePassword)">Add</button>
+			</div>
+			
+			<!-- Nothing to list -->
+			<div class="block take-all-width" ng-show="viewRemotes && noRemotes">
+				No Remotes found
+			</div>
+			
+			<!-- Elements list -->
+			<div class="element block take-all-width" ng-repeat="remote in remotes">
+				<div  class="filepath" ng-bind="remote.name"></div>
+				<div class="element-controls float-right">
+					<ul>
+						<li><a class="btn btn-unstage" ng-click="removeRemote(remote.name)"></a></li>
+						<li><a class="btn btn-up" ng-click="viewPush(remote.name)"></a></li>
+						<li><a class="btn btn-down" ng-click="viewPull(remote.name)"></a></li>
+					</ul>				
+				</div>
+				<div class="block take-all-width" ng-show="currentRemote==remote.name">
+					<div class="block take-all-width">
+						<span class="label block">Local Branch </span>
+						<select class="take-all-width" ng-model="localBranch">
+							<option value="{{branch}}" ng-repeat="branch in branches">{{branch}}</option>
+						</select>
+					</div>
+					<div class="block take-all-width">
+						<span class="label block">Remote Branch </span>
+						<select class="take-all-width" ng-model="remoteBranch"/>
+							<option value="{{branch}}" ng-repeat="branch in branches">{{branch}}</option>
+						</select>
+					</div>
+					<button class="take-all-width" ng-click="toggleRemoteActionView()">Cancel</button>
+					<button class="take-all-width" ng-click="remoteAction(pendingRemoteAction, remote.name, localBranch, remoteBranch)">{{pendingRemoteActionTitle}}</button>
+				</div>				
+			</div>
+			
+		</div>
+		
+		<!-- Commit -->
+		<div class="area area-commit block">
+			<span class="block area-title">
+				Commit Changes
+			</span>
+			<div class="fix-input-padding"><textarea id="txtCommitMessage" class="take-all-width" ng-model="commitMessage"></textarea></div>
+			<button id="btnCommit" class="take-all-width" ng-click="commit()">Commit</button>
+		</div>
+		
+		<!-- Stage -->
+		<div class="area area-stage block">
+			
+			<!-- Area Barre -->
+			<div class="element block take-all-width">
+				<span class="area-title">
+					Staged Changes
+				</span>
+				<div class="element-controls float-right">
+					<ul>
+						<li><a class="btn btn-unstage"  ng-click="unstageAll()"></a></li>
+					</ul>		
+				</div>
+			</div>
+			
+			<!-- Nothing to list -->
+			<div class="block take-all-width" ng-show="stage.length===0">
+				No changes added to the stage
+			</div>
+			
+			<!-- Elements list -->
+			<div class="element block take-all-width" ng-repeat="file in stage">
+				<div ng-class="file.class"></div><div  class="filepath" ng-bind="file.path"></div>
+				<div class="element-controls float-right">
+					<ul>
+						<li><a class="btn btn-unstage"  ng-click="unstageFile(file.path)"></a></li>
+					</ul>				
+				</div>
+			</div>
+				
+		</div>
+		
+		<!-- Working Directory -->
+		<div class="area area-tree block">
+			
+			<!-- Area Barre -->
+			<div class="element block take-all-width">
+				<span class="area-title">
+					Changes
+				</span>
+				<div class="element-controls float-right">
+					<ul>
+						<li><a class="btn btn-add" ng-click="addAll()"></a></li>
+						<li><a class="btn btn-revert" ng-click="revertAll()"></a></li>
+					</ul>		
+				</div>
+			</div>
+			
+			<!-- Nothing to list -->
+			<div class="block take-all-width" ng-show="workingTree.length===0">
+				No changes in the working directory
+			</div>
+			
+			<!-- Elements list -->
+			<div class="element block take-all-width" ng-repeat="file in workingTree">
+				<div ng-class="file.class"></div><div class="filepath" ng-bind="file.path"></div>
+				<div class="element-controls float-right">
+					<ul>
+						<li><a class="btn btn-add" ng-click="addFile(file.path)"></a></li>
+						<li><a class="btn btn-revert" ng-click="revertFile(file.path)"></a></li>
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+		
+		<!-- Debug -->
+		<div class="area-debug hidden">
+			<p>
+				<input type="text" id="action">
+				<button id="run" onclick="runCommand();">Run</button>
+			</p>
+			<div id="output" class="block">
+			</div>
+		</div>
+	</div>		
+</body>
+</html>

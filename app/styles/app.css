@@ -1,0 +1,106 @@
+body{
+	background-color: #F8F8F8;
+	margin: 0px;
+	margin-left: 5px;
+}
+.block{
+	display: block;
+}
+.area-title{
+	font-weight: bold;
+}
+.float-right{
+	float : right;
+	clear: right;
+}
+.hidden{
+	display: none;
+}
+.element{
+	border: 1px solid transparent;
+	line-height: 25px;
+}
+.element > div{
+	display: inline;
+	margin-right: 5px;
+}
+.take-all-width{
+	width:100%
+}
+.btn{
+	cursor: pointer;
+	display: inline-block;
+	background-size: auto;
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+.btn-refresh{
+	background-image: url(./images/glyphicons-82-refresh.png);		
+	background-size: 80%;	
+	width: 25px;
+	height: 26px;
+}
+.btn-add{
+	background-image: url(./images/glyphicons-433-plus.png);
+	width: 20px;
+	height: 20px;
+}
+.btn-unstage{
+	background-image: url(./images/glyphicons-434-minus.png);
+	width: 18px;
+	height: 4px;
+}
+.btn-revert{
+	background-image: url(./images/glyphicons-436-undo.png);
+	width: 24px;
+	height: 14px;
+}
+.btn-up{
+	background-image: url(./images/glyphicons-214-up-arrow.png);
+	width: 18px;
+	height: 20px;
+}
+.btn-down{
+	background-image: url(./images/glyphicons-213-down-arrow.png);
+	width: 18px;
+	height: 20px;
+}
+ul{
+	display:inline-block;
+	list-style-type: none;
+	padding:0px;
+	margin:0px;
+}
+ul > li {
+	padding: 1px;
+	display: inline-block;
+	height: 100%;
+}
+
+li > a {
+	vertical-align: middle;
+}
+.filepath{
+	white-space: nowrap;
+}
+.element > .element-controls {
+	display: none;
+}
+.element:hover > .element-controls{
+	display: block;
+}
+.element:hover{
+	background-color: #FAFAFA;
+}
+.fix-input-padding{
+	padding-right: 7px;
+}
+.area{
+	margin-top: 8px;
+}
+.area-title{
+	margin-bottom: 8px;
+}
+.remote_switch{
+	padding-top: 5px;
+}
