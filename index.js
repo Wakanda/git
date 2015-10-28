@@ -438,7 +438,8 @@ Git.open = function(){
 		studio.alert("No solution is open");
 		return;
 	}
-	studio.extension.openPageInTab('./index.html', 'Git', true);
+	studio.extension.registerTabPage("./index.html", './icon_small.png');
+	studio.extension.openPageInTab('./index.html', 'Git', true, "side");
 }
 
 /*
