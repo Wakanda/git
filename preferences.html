@@ -1,0 +1,69 @@
+<!--
+* This file is part of Wakanda software, licensed by Wakanda under
+*  (i) the GNU General Public License version 3 (GNU GPL v3), or
+*  (ii) the Affero General Public License version 3 (AGPL v3) or
+*  (iii) a commercial license.
+* This file remains the exclusive property of Wakanda and/or its licensors
+* and is protected by national and international legislations.
+* In any event, Licensee's compliance with the terms and conditions
+* of the applicable license constitutes a prerequisite to any use of this file.
+* Except as otherwise expressly stated in the applicable license,
+* such license does not include any other license or rights on this file,
+* Wakanda's and/or its licensors' trademarks and/or other proprietary rights.
+* Consequently, no title, copyright or other proprietary rights
+* other than those specified in the applicable license is granted.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>General Preferences</title>
+    <link rel="stylesheet" href="/Web Components/common/styles/preferences.css">
+</head>
+<body>
+    <main class="wakanda-preferences">
+        <h1>Git Preferences</h1>
+        <h2>Binary Location</h2>
+        <span id="gitLocation">(no location selected)</span>
+        <button id="setLocation">Browse</button>
+        <button id="resetLocation">Reset</button>
+    </main>
+    <script src="/Web Components/common/scripts/jquery-latest.min.js"></script>
+    <script>        
+        
+        (function(){
+            
+            var lblLocation = document.getElementById("gitLocation");
+            var btnBrowser  = document.getElementById("setLocation");
+            var btnReset    = document.getElementById("resetLocation");
+            
+            btnBrowser.onclick = function(){
+                var file = studio.fileSelectDialog();
+                
+                if(file){
+                    studio.setPreferences('git.path',file.path);
+                    lblLocation.innerText = file.path;
+                    
+                    refreshSettings();
+                }
+            }       
+            
+            btnReset.onclick = function(){
+                studio.setPreferences('git.path',"");
+                lblLocation.innerText = "(no location selected)";
+                
+                refreshSettings();
+            }
+            
+            function refreshSettings(){
+                studio.sendCommand("git.refreshPath");
+            }
+            
+            var gitPath = studio.getPreferences('git.path');
+            
+            gitPath && (lblLocation.innerText = gitPath);
+        })();
+        
+    </script>
+</body>
+</html>

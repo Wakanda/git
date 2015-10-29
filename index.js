@@ -442,6 +442,14 @@ Git.open = function(){
 	studio.extension.openPageInTab('./index.html', 'Git', true, "side");
 }
 
+Git.initPreferences = function(){
+	studio.extension.registerPreferencePanel('GIT', 'preferences.html', 400);
+}
+
+Git.refreshPath = function(){
+	gitPath = getGitPath();
+};
+
 /*
  * Internal functions
  */
@@ -501,14 +509,14 @@ function sendResponse(response){
 }
 
 function getGitPath(){
-	//TODO : read from pref
-	var pathFromPref = "";
+	
+	var pathFromPref = studio.getPreferences('git.path');
 	var path         = "";
 	
 	if(!pathFromPref){
 		path = os.isWindows ? "C:\\Program Files (x86)\\Git\\bin\\git.exe" : "git";
 	} else {
-		path = pathFromPref
+		path = pathFromPref;
 	}
 	
 	return path;
