@@ -101,8 +101,9 @@
 			<span class="block area-title">
 				Commit Changes
 			</span>
+			<div class="line"></div>
 			<div class="fix-input-padding"><textarea id="txtCommitMessage" class="take-all-width" ng-model="commitMessage"></textarea></div>
-			<button id="btnCommit" class="take-all-width" ng-click="commit()">Commit</button>
+			<button id="btnCommit" class="take-all-width ffButton" ng-click="commit()">Commit</button>
 		</div>
 		
 		<!-- Stage -->
@@ -119,6 +120,7 @@
 					</ul>		
 				</div>
 			</div>
+			<div class="line"></div>
 			
 			<!-- Nothing to list -->
 			<div class="block take-all-width" ng-show="stage.length===0">
@@ -152,6 +154,7 @@
 					</ul>		
 				</div>
 			</div>
+			<div class="line"></div>
 			
 			<!-- Nothing to list -->
 			<div class="block take-all-width" ng-show="workingTree.length===0">

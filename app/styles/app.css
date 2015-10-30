@@ -1,13 +1,12 @@
 body{
-	background-color: #F8F8F8;
-	margin: 0px;
-	margin-left: 5px;
+	background-color: white;
+	margin: 0 auto;
+	max-width: 96%;
+	font-family: 'Roboto', arial, sans-serif;
+	font-size: 13px;
 }
 .block{
 	display: block;
-}
-.area-title{
-	font-weight: bold;
 }
 .float-right{
 	float : right;
@@ -18,7 +17,7 @@ body{
 }
 .element{
 	border: 1px solid transparent;
-	line-height: 25px;
+	line-height: 20px;
 }
 .element > div{
 	display: inline;
@@ -96,11 +95,52 @@ li > a {
 	padding-right: 7px;
 }
 .area{
-	margin-top: 8px;
+	margin-top: 5px;
+	padding: 5px;
 }
 .area-title{
-	margin-bottom: 8px;
+	font-size: 16px;
+	line-height: 120%;
+	font-weight: bold;
+	margin: 0 0 10px;
+	color: #566370;
+	text-transform: uppercase;
 }
 .remote_switch{
 	padding-top: 5px;
+}
+.line {
+	clear: both;
+}
+.ffButton {
+  display: block;
+  font-size: 13px;
+  box-sizing: border-box;
+  border: none;
+  padding: 0 15px;
+  background-color: #e3e5e6;
+  color: #555;
+  text-align: center;
+  height: 36px;
+  line-height: 36px;
+  margin: 5px 5px 0 0;
+  transition: all .15s ease-in;
+  min-width: 100px;
+}
+
+.ffButton.error {
+  color: white;
+  background-color: #c9302c;
+}
+
+.ffButton.success {
+  color: white;
+  background-color: #5cb85c;
+}
+
+.ffButton:hover {
+    text-decoration: none;
+    background-color: #a6aaab;
+    color: #fff;
+    cursor: pointer;
 }
