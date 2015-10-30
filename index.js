@@ -169,6 +169,7 @@ Git.changeBranch = Git.gitSwitchBranch = function(){
 			"branch" : branch
 		}
 	});
+	studio.extension.sendDataToWakandaStudio('git.gitSwitchBranch', true);
 };
 
 Git.getBranches = Git.getGitBranchNames = function(params){
