@@ -515,7 +515,16 @@ function getGitPath(){
 	var path         = "";
 	
 	if(!pathFromPref){
-		path = os.isWindows ? "C:\\Program Files (x86)\\Git\\bin\\git.exe" : "git";
+		try {
+			if(os.isWindows){
+				path = shellWorker.exec("where git");
+			}else{
+				path = shellWorker.exec("which git");
+			}
+			studio.setPreferences('git.path',path);
+		} catch(e) {
+		    path = "git";
+		}
 	} else {
 		path = pathFromPref;
 	}
