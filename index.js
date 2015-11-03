@@ -517,9 +517,9 @@ function getGitPath(){
 	if(!pathFromPref){
 		try {
 			if(os.isWindows){
-				path = shellWorker.exec("where git");
+				path = shellWorker.exec("where git").trim();
 			}else{
-				path = shellWorker.exec("which git");
+				path = shellWorker.exec("which git").trim();
 			}
 			studio.setPreferences('git.path',path);
 		} catch(e) {
