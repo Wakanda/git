@@ -439,12 +439,12 @@ Git.open = function(){
 		studio.alert("No solution is open");
 		return;
 	}
-	studio.extension.registerTabPage("./index.html", './icon_small.png');
 	studio.extension.openPageInTab('./index.html', 'Git', true, "side");
 }
 
 Git.initPreferences = function(){
 	studio.extension.registerPreferencePanel('GIT', 'preferences.html', 400);
+	studio.extension.registerTabPage("./index.html", './icon_small.png');
 }
 
 Git.refreshPath = function(){
