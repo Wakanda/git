@@ -430,9 +430,6 @@ Git.clone = function(params){
 /*
  * Studio Actions
  */
-Git.onSolutionOpened = function(){
-	onSolutionOpened();
-};
 
 Git.open = function(){
 	if(!workingDirectory){
@@ -454,14 +451,6 @@ Git.refreshPath = function(){
 /*
  * Internal functions
  */
-
-function onSolutionOpened(){
-	if ( isGitRepository() ) {
-		studio.log("> Git Repository detected");
-	} else {
-		studio.log("> Not a Git Repository");
-	}
-}
 
 function isGitRepository(){
 	workingDirectory = getWorkingDirectory();

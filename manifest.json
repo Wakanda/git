@@ -14,11 +14,6 @@
 				"title": "status"
 			},
             {
-                "name": "onSolutionOpened",
-                "title": "onSolutionOpened",
-                "trigger": [ { "event": "onSolutionOpened" } ]
-            },
-            {
                 "name": "initPreferences",
                 "title": "initPreferences",
                 "trigger": [ { "event": "onStudioStart" } ]
