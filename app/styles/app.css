@@ -1,146 +1,283 @@
-body{
-	background-color: white;
-	margin: 0 auto;
-	max-width: 96%;
-	font-family: 'Roboto', arial, sans-serif;
-	font-size: 13px;
+body {
+    background-color: #f3f3f3;
+    color: #535353;
+    margin: 0 auto;
+    font-size: 13px;
+    font-family: 'Open Sans', sans-serif;
 }
-.block{
-	display: block;
+
+.block {
+    display: block;
+    clear: both;
 }
-.float-right{
-	float : right;
-	clear: right;
+
+.float-left {
+    float: left;
 }
-.hidden{
-	display: none;
+
+.float-right {
+    float: right;
 }
-.element{
-	border: 1px solid transparent;
-	line-height: 20px;
+
+.hidden {
+    display: none;
 }
-.element > div{
-	display: inline;
-	margin-right: 5px;
+
+.element {
+    border: 1px solid transparent;
+    line-height: 20px;
+    height: 25px;
 }
-.take-all-width{
-	width:100%
+
+.element > div {
+    display: inline-block;
+    margin-right: 10px;
+    height: 11px;
 }
-.btn{
-	cursor: pointer;
-	display: inline-block;
-	background-size: auto;
-	background-position: center center;
-	background-repeat: no-repeat;
+
+.take-all-width {
+    width: 100%
 }
-.btn-refresh{
-	background-image: url(./images/glyphicons-82-refresh.png);		
-	background-size: 80%;	
-	width: 25px;
-	height: 26px;
+
+.btn {
+    cursor: pointer;
+    display: inline-block;
+    background-size: auto;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
-.btn-add{
-	background-image: url(./images/glyphicons-433-plus.png);
-	width: 20px;
-	height: 20px;
+
+.btn-refresh {
+    background-image: url(./images/refresh.png);
+    background-size: contain;
+    width: 14px;
+    height: 14px;
 }
-.btn-unstage{
-	background-image: url(./images/glyphicons-434-minus.png);
-	width: 18px;
-	height: 4px;
+
+.btn-add {
+    background-image: url(./images/glyphicons-433-plus.png);
+    opacity: 0.6;
+    background-size: contain;
+    width: 11px;
+    height: 11px;
 }
-.btn-revert{
-	background-image: url(./images/glyphicons-436-undo.png);
-	width: 24px;
-	height: 14px;
+
+.btn-unstage {
+    background-image: url(./images/glyphicons-434-minus.png);
+    opacity: 0.6;
+    background-size: contain;
+    width: 11px;
+    height: 11px;
 }
-.btn-up{
-	background-image: url(./images/glyphicons-214-up-arrow.png);
-	width: 18px;
-	height: 20px;
+
+.btn-revert {
+    background-image: url(./images/glyphicons-436-undo.png);
+    opacity: 0.6;
+    background-size: contain;
+    width: 15px;
+    height: 11px;
 }
-.btn-down{
-	background-image: url(./images/glyphicons-213-down-arrow.png);
-	width: 18px;
-	height: 20px;
+
+.btn-up {
+    background-image: url(./images/glyphicons-214-up-arrow.png);
+    background-size: contain;
+    width: 18px;
+    height: 20px;
 }
-ul{
-	display:inline-block;
-	list-style-type: none;
-	padding:0px;
-	margin:0px;
+
+.btn-down {
+    background-image: url(./images/glyphicons-213-down-arrow.png);
+    background-size: contain;
+    width: 18px;
+    height: 20px;
 }
+
+ul {
+    display: inline-block;
+    padding: 0px;
+    margin: 0px;
+}
+
 ul > li {
-	padding: 1px;
-	display: inline-block;
-	height: 100%;
+    padding: 1px;
+    display: inline-block;
+    height: 100%;
 }
 
 li > a {
-	vertical-align: middle;
+    vertical-align: middle;
 }
-.filepath{
-	white-space: nowrap;
+
+.filepath {
+    white-space: nowrap;
 }
+
 .element > .element-controls {
-	display: none;
+    display: none;
 }
-.element:hover > .element-controls{
-	display: block;
+
+.element:hover > .element-controls {
+    display: block;
 }
-.element:hover{
-	background-color: #FAFAFA;
+
+.element:hover {
+    background-color: #e5e5e5;
 }
-.fix-input-padding{
-	padding-right: 7px;
+
+.element > .element-added {
+    background: #535353;
+    width: 4px;    
+    height: 4px;
+    margin: 15px 6px 0 10px;
+    display: block;
+    float: left;
 }
-.area{
-	margin-top: 5px;
-	padding: 5px;
+
+textarea {
+    height: 55px;
+    border: 1px solid #dcdcdc;
 }
-.area-title{
-	font-size: 16px;
-	line-height: 120%;
-	font-weight: bold;
-	margin: 0 0 10px;
-	color: #566370;
-	text-transform: uppercase;
+
+button img {
+    margin-right: 4px;
 }
-.remote_switch{
-	padding-top: 5px;
+
+.area {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    padding: 5px 15px 5px 10px;
+    box-sizing: border-box;
+    width: 100%;
 }
+
+.area-title {
+    display: block;
+    letter-spacing: 0.7px;
+    font-size: 12px;
+    text-transform: uppercase;
+    line-height: 120%;
+    font-weight: bold;
+    margin: 5px 0;
+    color: black;
+}
+
+.area-remotes {
+    margin-top: 0;
+    background-color: white;
+    border-bottom: 1px solid #cdcdcd;
+    padding-bottom: 10px;
+}
+
+.area-remotes input {
+    margin: 10px 1px;
+    display: block;
+    width: 99%;
+    box-sizing: border-box;
+    height: 22px;
+    line-height: 22px;
+}
+
+.remote_switch {
+    padding-top: 5px;
+}
+
 .line {
-	clear: both;
+    clear: both;
 }
+
 .ffButton {
-  display: block;
-  font-size: 13px;
-  box-sizing: border-box;
-  border: none;
-  padding: 0 15px;
-  background-color: #e3e5e6;
-  color: #555;
-  text-align: center;
-  height: 36px;
-  line-height: 36px;
-  margin: 5px 5px 0 0;
-  transition: all .15s ease-in;
-  min-width: 100px;
+    display: block;
+    font-size: 12px;
+    box-sizing: border-box;
+    border: none;
+    padding: 0 15px;
+    background-color: #e3e5e6;
+    color: #555;
+    text-align: center;
+    height: 36px;
+    line-height: 36px;
+    margin: 5px 5px 0 0;
+    transition: all .15s ease-in;
+    font-weight: 400;
+}
+
+.ffButton.transparent {
+    background: transparent;
+}
+
+.ffButton.blue {
+    color: white;
+    background-color: #44515e;
+}
+
+.ffButton.green {
+    color: white;
+    background-color: #4ab19d;
 }
 
 .ffButton.error {
-  color: white;
-  background-color: #c9302c;
+    color: white;
+    background-color: #c9302c;
 }
 
 .ffButton.success {
-  color: white;
-  background-color: #5cb85c;
+    color: white;
+    background-color: #5cb85c;
 }
 
 .ffButton:hover {
     text-decoration: none;
-    background-color: #a6aaab;
-    color: #fff;
+    background-color: #52687e;
     cursor: pointer;
+}
+
+.ffButton.transparent:hover {
+    background: #eee;
+}
+
+.ffButton.float-left {
+    display: block;
+    width: auto;
+    padding: 5px 25px 5px 20px;
+    line-height: 100%;
+}
+
+.header {
+    background: #fafafa;
+    height: 30px;
+    border-bottom: 1px solid #cdcdcd;
+}
+
+.header::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.header .btn-refresh {
+    margin: 8px;
+}
+
+.header ul.take-all-width {
+    box-sizing: border-box;
+    padding: 0 5px;
+    margin: 0 auto;
+    clear: both;
+    display: block;
+}
+
+.header ul li span {
+    font-size: 11px;
+}
+
+.margin-auto {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.clear::after {
+    content: "";
+    display: block;
+    clear: both;
 }
