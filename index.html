@@ -3,33 +3,35 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Git</title>
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
 	<script src="./lib/angular.min.js"></script>
 	<script src="./app/js/app.js"></script>
 	<link rel="stylesheet" href="./app/styles/app.css">
 </head>
 <body ng-controller="mainViewController">
-	<div class="header">
-		<div class="element-controls float-right">
-			<ul>
-				<li><a class="btn btn-refresh" ng-click="getStatus()"></a></li>
-			</ul>
-		</div>
-		<img ng-show="busy" src="./app/styles/images/loader.gif">
-		<div class="remote_switch" ng-hide="noGit">
-			<input type="checkbox" id="" ng-model="viewRemotes"/> Remotes
-		</div>
-	</div>
+	<header class="header">
+		<ul class="take-all-width">
+			<li class="float-left">
+				<div class="remote_switch" ng-hide="noGit">
+					<input type="checkbox" id="" ng-model="viewRemotes"/> <span>Remotes<img ng-show="busy" src="./app/styles/images/loader.gif" style="display:block;margin-left:10px"></span>					
+				</div>
+			</li>
+			<li class="float-right">
+				<a class="btn btn-refresh" ng-click="getStatus()"></a>
+			</li>
+		</ul>
+	</header>
 	<div class="area-notgit" ng-show="noGit">
-		<button id="btnInit" class="take-all-width ffButton" ng-click="init()">Create Git Repository</button>
+		<button id="btnInit" class="ffButton ffButton blue margin-auto" ng-click="init()">Create Git Repository</button>
 	</div>
 	<div class="area-git" ng-hide="noGit">
 		
 		<!-- Remotes -->
-		<div class="area area-remotes block" ng-show="viewRemotes">
+		<section class="area area-remotes block" ng-show="viewRemotes">
 			
 			<!-- Area Barre -->
 			<div class="element block take-all-width">
-				<span class="area-title">
+				<span class="area-title float-left">
 					Remotes
 				</span>
 				<div class="element-controls float-right">
@@ -43,26 +45,27 @@
 			<div class="block take-all-width " ng-show="viewAddRemote">
 				<div class="block take-all-width">
 					<span class="label block">Name </span>
-					<input type="text" id="addRemoteFirstInput" class="take-all-width" ng-model="newRemoteName"/>
+					<input type="text" id="addRemoteFirstInput" ng-model="newRemoteName"/>
 				</div>				
 				<div class="block take-all-width">
 					<span class="label block">URL </span>
-					<input type="text" class="take-all-width" ng-model="newRemoteURL"/>
+					<input type="text" ng-model="newRemoteURL"/>
 				</div>
 				<div class="block take-all-width">
 					<span class="label block">Username </span>
-					<input type="text" class="take-all-width" ng-model="newRemoteUser"/>
+					<input type="text" ng-model="newRemoteUser"/>
 				</div>
 				<div class="block take-all-width">
 					<span class="label block">Password </span>
-					<input type="password" class="take-all-width" ng-model="newRemotePassword"/>
+					<input type="password" ng-model="newRemotePassword"/>
 				</div>
-				<button class="take-all-width" ng-click="toggleAddRemote()">Cancel</button>
-				<button class="take-all-width" ng-click="addRemote(newRemoteName, newRemoteURL, newRemoteUser, newRemotePassword)">Add</button>
+				<button class="ffButton green float-left" ng-click="addRemote(newRemoteName, newRemoteURL, newRemoteUser, newRemotePassword)"><img src="./app/styles/images/checkmark.png"> Add</button>
+				<button class="ffButton transparent float-left" ng-click="toggleAddRemote()">Cancel</button>
+				<div class="clear"></div>
 			</div>
 			
 			<!-- Nothing to list -->
-			<div class="block take-all-width" ng-show="viewRemotes && noRemotes">
+			<div class="block take-all-width" ng-show="viewRemotes && noRemotes" ng-hide="viewAddRemote">
 				No Remotes found
 			</div>
 			
@@ -94,24 +97,25 @@
 				</div>				
 			</div>
 			
-		</div>
+		</section>
 		
 		<!-- Commit -->
-		<div class="area area-commit block">
+		<section class="area area-commit block">
 			<span class="block area-title">
 				Commit Changes
 			</span>
 			<div class="line"></div>
 			<div class="fix-input-padding"><textarea id="txtCommitMessage" class="take-all-width" ng-model="commitMessage"></textarea></div>
-			<button id="btnCommit" class="take-all-width ffButton" ng-click="commit()">Commit</button>
-		</div>
+			<button id="btnCommit" class="take-all-width ffButton blue float-left clear" ng-click="commit()"><img src="./app/styles/images/checkmark.png"> Commit</button>
+			<div class="clear"></div>
+		</section>
 		
 		<!-- Stage -->
-		<div class="area area-stage block">
+		<section class="area area-stage block">
 			
 			<!-- Area Barre -->
 			<div class="element block take-all-width">
-				<span class="area-title">
+				<span class="area-title float-left">
 					Staged Changes
 				</span>
 				<div class="element-controls float-right">
@@ -137,14 +141,14 @@
 				</div>
 			</div>
 				
-		</div>
+		</section>
 		
 		<!-- Working Directory -->
-		<div class="area area-tree block">
+		<section class="area area-tree block">
 			
 			<!-- Area Barre -->
 			<div class="element block take-all-width">
-				<span class="area-title">
+				<span class="area-title float-left">
 					Changes
 				</span>
 				<div class="element-controls float-right">
@@ -172,17 +176,17 @@
 				</div>
 			</div>
 			
-		</div>
+		</section>
 		
 		<!-- Debug -->
-		<div class="area-debug hidden">
+		<section class="area-debug hidden">
 			<p>
 				<input type="text" id="action">
 				<button id="run" onclick="runCommand();">Run</button>
 			</p>
 			<div id="output" class="block">
 			</div>
-		</div>
+		</section>
 	</div>		
 </body>
 </html>
