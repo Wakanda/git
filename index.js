@@ -28,6 +28,8 @@ var errors     = {
 var gitPath    = getGitPath();
 var actionsParsers = {};
 var workingDirectory;
+var _targetExtension = null;
+var _targetFunction  = null;
 
 Git.runCommand = function(options){
 	var command      = options.cmd;
@@ -61,7 +63,10 @@ Git.runCommand = function(options){
 };
 
 Git.runGitAction = function(options){
-
+	
+	var targetFunction  = _targetFunction;
+	var targetExtension = _targetExtension;
+	
 	function handleActionData(data){
 		if(actionsParsers[options.action]){
 			data = actionsParsers[options.action](data, options.params);
@@ -112,7 +117,7 @@ Git.runGitAction = function(options){
 			studio.extension.sendDataToWakandaStudio('git.getGitBranchNames', response.data);
 			sync = false;
 		} else{
-			sendResponse(response);
+			sendResponse(targetExtension, targetFunction, response);
 		}
 		
 	};
@@ -493,8 +498,8 @@ function dataMessage(result){
 	};
 }
 
-function sendResponse(response){
-	studio.sendExtensionWebZoneCommand('git','onMessage',[JSON.stringify(response)]);
+function sendResponse(targetExtension, targetFunction, response){
+	studio.sendExtensionWebZoneCommand(targetExtension, targetFunction, [JSON.stringify(response)]);
 }
 
 function getGitPath(){
@@ -514,12 +519,20 @@ function getGitPath(){
 
 exports.handleMessage = function handleMessage(message){
     var action      = message.action;
+	var params      = message.params;
+	
     if( action ) {
-        var result = Git[action](message.params);
+		_targetExtension = params && params.targetExtension ? params.targetExtension : "git";
+		_targetFunction  = params && params.targetFunction ? params.targetFunction : "onMessage";
+		
+        var result = Git[action](params);		
 		
 		if(result && result.error){
-			sendResponse(result);
+			sendResponse(_targetExtension, _targetFunction, result);
 		}
+		
+		_targetExtension = null;
+		_targetFunction  = null;
 		
         return result;
     }
