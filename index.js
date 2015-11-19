@@ -494,8 +494,7 @@ function dataMessage(result){
 }
 
 function sendResponse(response){
-	studio.setPreferences("git.result", JSON.stringify(response));
-	studio.setPreferences("git.done", "true");
+	studio.sendExtensionWebZoneCommand('git','onMessage',[JSON.stringify(response)]);
 }
 
 function getGitPath(){

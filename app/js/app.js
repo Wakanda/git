@@ -386,25 +386,19 @@ function runCommand(command, params){
 	
 	studio.setPreferences("git.done", "false");
 	studio.sendCommand(studioAction);
-	poll();
 }
 
-function poll(){
-	if (studio.getPreferences("git.done") === "true"){
-		var result = JSON.parse(studio.getPreferences("git.result"));
-		
-		scope.busy = false;
-		var callback = callbacks.pop();
-		callback && callback(result);
+function poll(message){
+	var result = JSON.parse(message);
+	
+	scope.busy = false;
+	var callback = callbacks.pop();
+	callback && callback(result);
 
-		try{
-			scope.$digest();
-		}catch(e){
-			setTimeout(scope.$digest,0);
-		}
-		
-	} else {
-		setTimeout(poll,100);
+	try{
+		scope.$digest();
+	}catch(e){
+		setTimeout(scope.$digest,0);
 	}
 }
 
@@ -414,10 +408,6 @@ function focusElement(id){
 	}, 0);
 }
 
-/*
-function onMessage(message){
-	studio.log(JSON.stringify(message));
-	
-	callback(message);
+function onMessage(message){	
+	poll(message);
 }
-*/
