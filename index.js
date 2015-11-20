@@ -27,6 +27,7 @@ var errors     = {
 };
 var gitPath    = getGitPath();
 var actionsParsers = {};
+var logModifiers   = {};
 var workingDirectory;
 var _targetExtension = null;
 var _targetFunction  = null;
@@ -82,7 +83,6 @@ Git.runGitAction = function(options){
 	}
 	
 	var data   = "";
-	var error  = "";
 
 	var cmd     = getCmdFromAction(options.action);
 	var params  = options.params || {};
@@ -97,20 +97,19 @@ Git.runGitAction = function(options){
 		var errorResponse;
 		var dataResponse;
 		var response = {};
-		
-		if(error){
-			errorResponse = handleActionError(error);
-		}
-		
+		var isError  = message.exitStatus !== 0;
+
 		if(data){
 			dataResponse = handleActionData(data);
 		}
 		
-		response.error = errorResponse;
 		response.data  = dataResponse;
 		
-		studio.log(data);
-		studio.log(error);
+		logCommandOutput({
+			error : isError,
+			action : options.action,
+			output : data
+		});
 		
 		if(sync){
 			exitWait();			
@@ -517,6 +516,56 @@ function getGitPath(){
 	return path;
 }
 
+function replacePatterns(template, list)
+{
+	var output = template;
+
+	list.forEach(function(element){
+		output = replacePattern(output, element.variable, element.value);
+	});
+
+	return output;
+};
+
+function replacePattern(template, variable, value)
+{
+	return template.replace(new RegExp("\\{\\{"+variable+"\\}\\}", "g"), value);
+}
+
+function logCommandOutput(options){
+	var isError = options.error || false;
+	var output  = options.output || "";
+	var action  = options.action;
+
+	if(!output || !action){
+		return;
+	}
+
+	if(logModifiers[action]){
+		output = logModifiers[action](output);
+	}
+
+	studio.log(output);
+	//printConsole({
+	//	"type" : isError ? "ERROR" : "INFO",
+	//	"message" : output
+	//});
+}
+
+function getMessageString(options) {
+	var message = {
+		msg: options.message,
+		type: options.type || null,
+		category: options.category || 'env'
+    };
+
+	return 'wakanda-extension-mobile-console.append.' + (new Buffer(JSON.stringify(message), "utf8")).toString("base64");
+}
+
+function printConsole(obj) {
+    studio.sendCommand(getMessageString(obj));
+}
+
 exports.handleMessage = function handleMessage(message){
     var action      = message.action;
 	var params      = message.params;
@@ -541,21 +590,9 @@ exports.handleMessage = function handleMessage(message){
     }
 };
 
-function replacePatterns(template, list)
-{
-	var output = template;
-
-	list.forEach(function(element){
-		output = replacePattern(output, element.variable, element.value);
-	});
-
-	return output;
-};
-
-function replacePattern(template, variable, value)
-{
-	return template.replace(new RegExp("\\{\\{"+variable+"\\}\\}", "g"), value);
-}
+/*
+ * Actions Parsers
+ */
 
 actionsParsers.status = function(data, params){
 	var utils = require("git-utils");
@@ -608,4 +645,12 @@ actionsParsers.getBranches = function(data){
 	});
 	
 	return result;
+};
+
+/*
+ * Log Modifiers
+ */
+
+logModifiers.push = logModifiers.pull = logModifiers.addRemote = logModifiers.getRemotes = function(output){
+	return output.replace(new RegExp("//[^@]+@","g"),"//");
 };
