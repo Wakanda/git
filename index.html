@@ -70,8 +70,8 @@
 			</div>
 			
 			<!-- Elements list -->
-			<div class="element block take-all-width" ng-repeat="remote in remotes">
-				<div  class="filepath" ng-bind="remote.name"></div>
+			<div class="element block take-all-width auto-height" ng-repeat="remote in remotes">
+				<div  class="remote-name filepath" ng-bind="remote.name"></div>
 				<div class="element-controls float-right">
 					<ul>
 						<li><a class="btn btn-unstage" ng-click="removeRemote(remote.name)"></a></li>
@@ -79,7 +79,7 @@
 						<li><a class="btn btn-down" ng-click="viewPull(remote.name)"></a></li>
 					</ul>				
 				</div>
-				<div class="block take-all-width" ng-show="currentRemote==remote.name">
+				<div class="element-remotes block take-all-width" ng-show="currentRemote==remote.name">
 					<div class="block take-all-width">
 						<span class="label block">Local Branch </span>
 						<select class="take-all-width" ng-model="localBranch">
@@ -92,8 +92,9 @@
 							<option value="{{branch}}" ng-repeat="branch in branches">{{branch}}</option>
 						</select>
 					</div>
-					<button class="take-all-width" ng-click="toggleRemoteActionView()">Cancel</button>
-					<button class="take-all-width" ng-click="remoteAction(pendingRemoteAction, remote.name, localBranch, remoteBranch)">{{pendingRemoteActionTitle}}</button>
+					<button class="ffButton green float-left" ng-click="remoteAction(pendingRemoteAction, remote.name, localBranch, remoteBranch)">{{pendingRemoteActionTitle}}</button>
+					<button class="ffButton transparent float-left" ng-click="toggleRemoteActionView()">Cancel</button>
+					<div class="clear"></div>
 				</div>				
 			</div>
 			

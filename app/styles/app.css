@@ -35,6 +35,26 @@ body {
     height: 11px;
 }
 
+.element .element-remotes {
+    height: auto;
+    display: block;
+    clear: both;
+    padding: 0 5px 5px;
+    box-sizing: border-box;
+}
+
+.element .remote-name {
+    height: auto;
+    line-height: 20px;
+    padding: 0 5px;
+}
+
+.element .remote-name + .element-controls {
+    overflow: hidden;
+    height: 20px;
+    margin-top: -2px;
+}
+
 .take-all-width {
     width: 100%
 }
@@ -80,16 +100,19 @@ body {
 
 .btn-up {
     background-image: url(./images/glyphicons-214-up-arrow.png);
+    opacity: 0.6;
     background-size: contain;
-    width: 18px;
-    height: 20px;
+    width: 11px;
+    height: 11px;
+    margin-left: 2px;
 }
 
 .btn-down {
     background-image: url(./images/glyphicons-213-down-arrow.png);
+    opacity: 0.6;
     background-size: contain;
-    width: 18px;
-    height: 20px;
+    width: 11px;
+    height: 11px;
 }
 
 ul {
@@ -280,4 +303,8 @@ button img {
     content: "";
     display: block;
     clear: both;
+}
+
+.auto-height {
+    height: auto;
 }
