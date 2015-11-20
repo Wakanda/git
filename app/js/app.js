@@ -200,7 +200,7 @@ app.controller("mainViewController", ["$scope", "git", function($scope, git){
 	};
 	
 	$scope.revertFile = function(file){
-		if(confirm("If you proceed you will lose the changes to the selected file")){
+		if(confirm("If you proceed, the changes to the selected file will be lost.")){
 			git.revertFile(file, function(){
 				$scope.getStatus();
 			});
@@ -209,11 +209,11 @@ app.controller("mainViewController", ["$scope", "git", function($scope, git){
 	
 	$scope.revertAll = function(){
 		if($scope.stage.length > 0){
-			alert("You need to commit or unstage your staged changes first");
+			alert("You must first commit or unstage your staged changes.");
 			return;
 		}
 		
-		if(confirm("If you proceed you will lose all your changes")){
+		if(confirm("If you proceed, all your changes will be lost.")){
 			git.revertAll(function(){
 				$scope.getStatus();
 			});
@@ -234,7 +234,7 @@ app.controller("mainViewController", ["$scope", "git", function($scope, git){
 	
 	$scope.commit = function(){
 		if(!$scope.commitMessage){
-			alert("You need to type a commit message.");
+			alert("You must enter a commit message.");
 			return;
 		}
 		
@@ -368,7 +368,7 @@ app.controller("mainViewController", ["$scope", "git", function($scope, git){
 
 function runCommand(command, params){
 	if(scope.busy){
-		alert("A command is still running !");
+		alert("A command is still executing!");
 		return;
 	}
 	scope.busy = true;

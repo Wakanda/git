@@ -1,9 +1,18 @@
+@-webkit-keyframes spin {
+    0%   {-webkit-transform: rotate(360deg)}
+    100% {-webkit-transform: rotate(0deg)}
+}
+
 body {
     background-color: #f3f3f3;
     color: #535353;
     margin: 0 auto;
     font-size: 13px;
     font-family: 'Open Sans', sans-serif;
+}
+
+small {
+    font-size: 70%;
 }
 
 .block {
@@ -23,9 +32,14 @@ body {
     display: none;
 }
 
+p.small { 
+    font-size: 11px;
+}
+
 .element {
+    position: relative;
     border: 1px solid transparent;
-    line-height: 20px;
+    line-height: 25px;
     height: 25px;
 }
 
@@ -44,8 +58,6 @@ body {
 }
 
 .element .remote-name {
-    height: auto;
-    line-height: 20px;
     padding: 0 5px;
 }
 
@@ -53,6 +65,10 @@ body {
     overflow: hidden;
     height: 20px;
     margin-top: -2px;
+}
+
+.element .remote-name + .element-controls ul {
+    padding: 0;
 }
 
 .take-all-width {
@@ -72,6 +88,10 @@ body {
     background-size: contain;
     width: 14px;
     height: 14px;
+}
+
+.btn-refresh.loading {
+    -webkit-animation: spin 1s infinite linear;
 }
 
 .btn-add {
@@ -131,34 +151,97 @@ li > a {
     vertical-align: middle;
 }
 
-.filepath {
-    white-space: nowrap;
-}
-
 .element > .element-controls {
     display: none;
+    position: absolute;
+    top: -2px;
+    right: 0;
 }
 
-.element:hover > .element-controls {
+.area-remotes .element > .element-controls {
+    top: 0;
     display: block;
+}
+
+.area-remotes .element-title > .element-controls {
+    top: -2px;
 }
 
 .element:hover {
     background-color: #e5e5e5;
 }
 
+.element:hover > .element-controls {
+    display: block;
+}
+
+.element.element-title:hover {
+    background-color: transparent;
+}
+
+.area-remotes .element:hover {
+    background-color: transparent;
+}
+
 .element > .element-added {
     background: #535353;
     width: 4px;    
     height: 4px;
-    margin: 15px 6px 0 10px;
+    margin: 10px 6px 0 10px;
     display: block;
     float: left;
+}
+
+.element .filepath {
+    display: block;
+    float: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 85%;
+    overflow: hidden;
+    height: 25px;
+}
+
+.area-tree .element .filepath {
+    width: 80%;
+}
+
+@media screen and (max-width: 250px) {
+    .element > .element-added {
+        display: none;
+    }
 }
 
 textarea {
     height: 55px;
     border: 1px solid #dcdcdc;
+}
+
+select, input[type="text"] {
+    padding: 5px 35px 5px 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    margin: 10px 0;
+    border-radius: 0;
+    border: 1px solid #ccc;
+}
+
+select {   
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;     
+    background: #eee url('./images/selectarrow.png') no-repeat no-repeat center right;
+    position: relative;
+}
+
+select:after {
+    content: "▼";
+    display: block;
+    position: absolute;
+    top: 5px;
+    right: 5px;
 }
 
 button img {
@@ -201,6 +284,7 @@ button img {
 }
 
 .remote_switch {
+    cursor: pointer;
     padding-top: 5px;
 }
 
@@ -307,4 +391,9 @@ button img {
 
 .auto-height {
     height: auto;
+}
+
+.tip {
+    background:#f3f3f3;
+    padding: 8px 10px;
 }

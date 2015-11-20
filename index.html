@@ -12,12 +12,12 @@
 	<header class="header">
 		<ul class="take-all-width">
 			<li class="float-left">
-				<div class="remote_switch" ng-hide="noGit">
-					<input type="checkbox" id="" ng-model="viewRemotes"/> <span>Remotes<img ng-show="busy" src="./app/styles/images/loader.gif" style="display:block;margin-left:10px"></span>					
+				<div class="remote_switch" ng-hide="noGit" ng-click="viewRemotes = !viewRemotes">
+					<small>{{ viewRemotes ? '▼' : '►'}}</small> <span>Remote Repositories</span>			
 				</div>
 			</li>
 			<li class="float-right">
-				<a class="btn btn-refresh" ng-click="getStatus()"></a>
+				<a class="btn btn-refresh" ng-class="busy ? 'loading' : ''" ng-click="getStatus()"></a>
 			</li>
 		</ul>
 	</header>
@@ -30,9 +30,9 @@
 		<section class="area area-remotes block" ng-show="viewRemotes">
 			
 			<!-- Area Barre -->
-			<div class="element block take-all-width">
+			<div class="element element-title block take-all-width">
 				<span class="area-title float-left">
-					Remotes
+					Remote Repositories
 				</span>
 				<div class="element-controls float-right">
 					<ul>
@@ -59,13 +59,15 @@
 					<span class="label block">Password </span>
 					<input type="password" ng-model="newRemotePassword"/>
 				</div>
+				<p class="small tip">The password will be saved as plain text in the .git/config file. You can however leave the Username and Password fields empty and <a href="http://wakanda.github.io/wakanda-studio/version-control.html#remote" target="_blank">configure your operating system</a>.</p>
 				<button class="ffButton green float-left" ng-click="addRemote(newRemoteName, newRemoteURL, newRemoteUser, newRemotePassword)"><img src="./app/styles/images/checkmark.png"> Add</button>
 				<button class="ffButton transparent float-left" ng-click="toggleAddRemote()">Cancel</button>
 				<div class="clear"></div>
+				<br>
 			</div>
 			
 			<!-- Nothing to list -->
-			<div class="block take-all-width" ng-show="viewRemotes && noRemotes" ng-hide="viewAddRemote">
+			<div class="block take-all-width"  hidden ng-show="noRemotes && viewRemotes && !viewAddRemote">
 				No Remotes found
 			</div>
 			
@@ -92,16 +94,17 @@
 							<option value="{{branch}}" ng-repeat="branch in branches">{{branch}}</option>
 						</select>
 					</div>
-					<button class="ffButton green float-left" ng-click="remoteAction(pendingRemoteAction, remote.name, localBranch, remoteBranch)">{{pendingRemoteActionTitle}}</button>
+					<button class="ffButton green float-left" ng-click="remoteAction(pendingRemoteAction, remote.name, localBranch, remoteBranch)"><img src="./app/styles/images/checkmark.png"> {{pendingRemoteActionTitle}}</button>
 					<button class="ffButton transparent float-left" ng-click="toggleRemoteActionView()">Cancel</button>
 					<div class="clear"></div>
-				</div>				
+				</div>		
+				<div class="clear"></div>		
 			</div>
 			
 		</section>
 		
 		<!-- Commit -->
-		<section class="area area-commit block">
+		<section class="area element-title area-commit block">
 			<span class="block area-title">
 				Commit Changes
 			</span>
@@ -115,7 +118,7 @@
 		<section class="area area-stage block">
 			
 			<!-- Area Barre -->
-			<div class="element block take-all-width">
+			<div class="element element-title block take-all-width">
 				<span class="area-title float-left">
 					Staged Changes
 				</span>
@@ -148,7 +151,7 @@
 		<section class="area area-tree block">
 			
 			<!-- Area Barre -->
-			<div class="element block take-all-width">
+			<div class="element element-title block take-all-width">
 				<span class="area-title float-left">
 					Changes
 				</span>
