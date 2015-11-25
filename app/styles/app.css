@@ -397,3 +397,7 @@ button img {
     background:#f3f3f3;
     padding: 8px 10px;
 }
+
+.more-results:hover {
+    background: transparent;
+}
