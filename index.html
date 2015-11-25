@@ -136,7 +136,7 @@
 			</div>
 			
 			<!-- Elements list -->
-			<div class="element block take-all-width" ng-repeat="file in stage">
+			<div class="element block take-all-width" ng-repeat="file in stage.slice(0, 100)">
 				<div ng-class="file.class"></div><div  class="filepath" ng-bind="file.path"></div>
 				<div class="element-controls float-right">
 					<ul>
@@ -144,7 +144,7 @@
 					</ul>				
 				</div>
 			</div>
-				
+			<div class="element block take-all-width more-results" ng-show="stage.length>99">+ {{stage.length-100}} other files</div>
 		</section>
 		
 		<!-- Working Directory -->
@@ -170,7 +170,7 @@
 			</div>
 			
 			<!-- Elements list -->
-			<div class="element block take-all-width" ng-repeat="file in workingTree">
+			<div class="element block take-all-width" ng-repeat="file in workingTree.slice(0, 100)">
 				<div ng-class="file.class"></div><div class="filepath" ng-bind="file.path"></div>
 				<div class="element-controls float-right">
 					<ul>
@@ -179,6 +179,7 @@
 					</ul>
 				</div>
 			</div>
+			<div class="element block take-all-width more-results" ng-show="workingTree.length>99">+ {{workingTree.length-100}} other files</div>
 			
 		</section>
 		
