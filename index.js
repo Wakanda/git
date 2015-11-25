@@ -440,7 +440,7 @@ Git.open = function(){
 		studio.alert("No solution is open");
 		return;
 	}
-	studio.extension.openPageInTab('./index.html', 'Git', true, "side");
+	studio.extension.openPageInTab('./index.html', 'Git', false, "side");
 }
 
 Git.initPreferences = function(){
