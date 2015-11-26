@@ -13,7 +13,7 @@
 		<ul class="take-all-width">
 			<li class="float-left">
 				<div class="remote_switch" ng-hide="noGit" ng-click="viewRemotes = !viewRemotes">
-					<small>{{ viewRemotes ? '▼' : '►'}}</small> <span>Repositories</span>			
+					<small>{{ viewRemotes ? '▼' : '►'}}</small> <span>Remote Repositories</span>			
 				</div>
 			</li>
 			<li class="float-right">
@@ -22,7 +22,7 @@
 		</ul>
 	</header>
 	<div class="area-notgit" ng-show="noGit">
-		<button id="btnInit" class="ffButton ffButton blue margin-auto" ng-click="init()"> Create a repository</button>
+		<button id="btnInit" class="ffButton ffButton blue margin-auto" ng-click="init()"> Create Git Repository</button>
 	</div>
 	<div class="area-git" ng-hide="noGit">
 		
@@ -68,7 +68,7 @@
 			
 			<!-- Nothing to list -->
 			<div class="block take-all-width"  hidden ng-show="noRemotes && viewRemotes && !viewAddRemote">
-				No remote repositories were found.
+				No remote repositories found
 			</div>
 			
 			<!-- Elements list -->
@@ -106,7 +106,7 @@
 		<!-- Commit -->
 		<section class="area element-title area-commit block">
 			<span class="block area-title">
-				Commit message
+				Commit Changes
 			</span>
 			<div class="line"></div>
 			<div class="fix-input-padding"><textarea id="txtCommitMessage" class="take-all-width" ng-model="commitMessage"></textarea></div>
@@ -132,7 +132,7 @@
 			
 			<!-- Nothing to list -->
 			<div class="block take-all-width" ng-show="stage.length===0">
-				No changes were added to the stage.
+				No changes were added to the stage
 			</div>
 			
 			<!-- Elements list -->
@@ -166,7 +166,7 @@
 			
 			<!-- Nothing to list -->
 			<div class="block take-all-width" ng-show="workingTree.length===0">
-				No changes are in the working directory
+				No changes in the working directory
 			</div>
 			
 			<!-- Elements list -->
