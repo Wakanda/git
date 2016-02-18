@@ -8,7 +8,7 @@ body {
     color: #535353;
     margin: 0 auto;
     font-size: 13px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Open Sans', 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
 small {
