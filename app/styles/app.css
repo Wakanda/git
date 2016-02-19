@@ -8,7 +8,7 @@ body {
     color: #535353;
     margin: 0 auto;
     font-size: 13px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Open Sans', 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
 small {
@@ -158,6 +158,14 @@ li > a {
     right: 0;
 }
 
+.area-notgit {
+    text-align: center;
+}
+
+.area-notgit button {
+    display: inline-block;
+}
+
 .area-remotes .element > .element-controls {
     top: 0;
     display: block;
@@ -279,8 +287,8 @@ button img {
     display: block;
     width: 99%;
     box-sizing: border-box;
-    height: 22px;
-    line-height: 22px;
+    height: 24px;
+    line-height: 100%;
 }
 
 .remote_switch {
