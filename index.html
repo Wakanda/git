@@ -4,51 +4,70 @@
 	<meta charset="UTF-8">
 	<title>Git</title>
 	<script src="./lib/angular.min.js"></script>
+  <script src="./lib/angular-sanitize.min.js"></script>
 	<script src="./app/js/app.js"></script>
 	<link rel="stylesheet" href="./app/styles/app.css">
 </head>
-<body ng-controller="mainViewController">
+<body id="mainViewController" ng-controller="mainViewController">
 	<header class="header">
 		<ul class="take-all-width">
-			<li class="float-left">
-				<div class="remote_switch" ng-hide="noGit" ng-click="viewRemotes = !viewRemotes">
-					<small>{{ viewRemotes ? '▼' : '►'}}</small> <span>Remote Repositories</span>			
-				</div>
+			<!-- Git MENU -->
+			<li class="float-right navigation">
+				<ul class="top-level">
+					<li><a href="#" class="dotBtn">...</a>
+						<div class="over-menu">
+							<ul class="sub-level">
+								<li><a href="#" ng-click="fViewPushForm(false)">Push</a></li>
+								<li><a href="#" ng-click="fViewPullForm()">Pull</a></li>
+								<li><a href="#" ng-click="fViewRemotes()">View remotes</a></li>
+								<li><a href="#" ng-click="fViewAddRemote()">Add a remote</a></li>
+								<li><a href="#" ng-click="getStatus()">Refresh</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
 			</li>
+			<!-- Git refresh -->
 			<li class="float-right">
-				<a class="btn btn-refresh" ng-class="busy ? 'loading' : ''" ng-click="getStatus()"></a>
+				<a class="btn btn-refresh" ng-class="busy ? 'loading' : ''" ng-click="getStatus()" title="Refresh"></a>
 			</li>
 		</ul>
 	</header>
+
+  <!-- notification popup -->
+  <div class="notif" id="notif">
+    <button class="ffButton ffCloseButton float-right" ng-click="closeNotif()"></button>
+    <p ng-bind-html="notifMessage"></p>
+    <a href="#" onClick="openConsole();">Open the Console &raquo;</a>
+  </div>
+
 	<div class="area-notgit" ng-show="noGit">
-		<button id="btnInit" class="ffButton ffButton blue margin-auto" ng-click="init()">Create Git Repository</button>
+		<button id="btnInit" class="ffButton blue float-left" ng-click="init()">Create Git Repository</button>
 	</div>
+
 	<div class="area-git" ng-hide="noGit">
-		
+
 		<!-- Remotes -->
-		<section class="area area-remotes block" ng-show="viewRemotes">
-			
+		<section class="area area-remotes block" ng-show="remoteList">
 			<!-- Area Barre -->
 			<div class="element element-title block take-all-width">
 				<span class="area-title float-left">
 					Remote Repositories
 				</span>
-				<div class="element-controls float-right">
-					<ul>
-						<li><a class="btn btn-add"  ng-click="toggleAddRemote()"></a></li>
-					</ul>		
-				</div>
+				<button class="ffButton ffCloseButton float-right" ng-click="closeRemoteList()"></button>
 			</div>
-			
-			<!-- Add New Remote -->
-			<div class="block take-all-width " ng-show="viewAddRemote">
+
+			<!-- Add/Update Remote -->
+      <div ng-class="{'block take-all-width are-add-remote': true, 'border-bottom': remotes.length}" ng-show="remoteForm">
 				<div class="block take-all-width">
 					<span class="label block">Name </span>
-					<input type="text" id="addRemoteFirstInput" ng-model="newRemoteName"/>
-				</div>				
+					<input type="text" id="addRemoteFirstInput" ng-model="newRemoteName" ng-change="newRemoteNameMsg=''"/>
+					<span class="alert value">{{newRemoteNameMsg}}</span>
+				</div>
 				<div class="block take-all-width">
-					<span class="label block">URL </span>
-					<input type="text" ng-model="newRemoteURL"/>
+					<span class="label block">Source URL</span>
+					<input type="text" ng-model="newRemoteURL" ng-change="newRemoteURLMsg=''" placeholder="https://"/>
+					<span class="alert value">{{newRemoteURLMsg}}</span>
 				</div>
 				<div class="block take-all-width">
 					<span class="label block">Username </span>
@@ -58,50 +77,114 @@
 					<span class="label block">Password </span>
 					<input type="password" ng-model="newRemotePassword"/>
 				</div>
-				<p class="small tip">The password will be saved as plain text in the .git/config file. You can however leave the Username and Password fields empty and <a href="http://wakanda.github.io/wakanda-studio/version-control.html#remote" target="_blank">configure your operating system</a>.</p>
-				<button class="ffButton green float-left" ng-click="addRemote(newRemoteName, newRemoteURL, newRemoteUser, newRemotePassword)"><img src="./app/styles/images/checkmark.png"> Add</button>
-				<button class="ffButton transparent float-left" ng-click="toggleAddRemote()">Cancel</button>
+				<p class="small tip">The password will be saved as plain text in the .git/config file. You can however leave the Username and Password fields empty and
+					<a href="http://wakanda.github.io/wakanda-studio/version-control.html#remote" target="_blank">configure your operating system</a>.
+				</p>
+				<button class="ffButton green float-left" ng-click="createOrUpdateRemote()">
+					<img src="./app/styles/images/checkmark.png">
+					{{remoteActionName}}
+				</button>
+				<button class="ffButton transparent float-right" ng-click="closeRemote()" ng-disabled="disableRemote">Cancel</button>
 				<div class="clear"></div>
 				<br>
+        <span class="alert" id="remoteError"></span>
 			</div>
-			
 			<!-- Nothing to list -->
-			<div class="block take-all-width"  hidden ng-show="noRemotes && viewRemotes && !viewAddRemote">
+			<div class="block take-all-width"  hidden ng-show="noRemotes && remoteList && !remoteForm">
 				No remote repositories found
 			</div>
-			
+
 			<!-- Elements list -->
-			<div class="element block take-all-width auto-height" ng-repeat="remote in remotes">
-				<div  class="remote-name filepath" ng-bind="remote.name"></div>
+			<div class="element block take-all-width auto-height element-list" ng-repeat="remote in remotes">
+				<div  class="remote-name filepath square-list" ng-bind="remote.name"></div>
+				<!-- Remotes list -->
 				<div class="element-controls float-right">
 					<ul>
-						<li><a class="btn btn-unstage" ng-click="removeRemote(remote.name)"></a></li>
-						<li><a class="btn btn-up" ng-click="viewPush(remote.name)"></a></li>
-						<li><a class="btn btn-down" ng-click="viewPull(remote.name)"></a></li>
-					</ul>				
+						<li><a class="btn btn-remove" ng-click="removeRemote(remote.name)" title="remove this remote"></a></li>
+						<li><a class="btn btn-edit" ng-click="editRemote(remote.name)" title="edit this remote"></a></li>
+					</ul>
 				</div>
-				<div class="element-remotes block take-all-width" ng-show="currentRemote==remote.name">
-					<div class="block take-all-width">
-						<span class="label block">Local Branch </span>
-						<select class="take-all-width" ng-model="localBranch">
-							<option value="{{branch}}" ng-repeat="branch in branches">{{branch}}</option>
-						</select>
-					</div>
-					<div class="block take-all-width">
-						<span class="label block">Remote Branch </span>
-						<select class="take-all-width" ng-model="remoteBranch"/>
-							<option value="{{branch}}" ng-repeat="branch in branches">{{branch}}</option>
-						</select>
-					</div>
-					<button class="ffButton green float-left" ng-click="remoteAction(pendingRemoteAction, remote.name, localBranch, remoteBranch)"><img src="./app/styles/images/checkmark.png"> {{pendingRemoteActionTitle}}</button>
-					<button class="ffButton transparent float-left" ng-click="toggleRemoteActionView()">Cancel</button>
-					<div class="clear"></div>
-				</div>		
-				<div class="clear"></div>		
+				<div class="clear"></div>
 			</div>
-			
 		</section>
-		
+
+		<!-- PUSH -->
+		<section ng-show="pushForm" class="ffForm">
+			<div class="ffContainer">
+				<div class="ffHeader">
+					<span>Push</span>
+					<button class="ffButton ffCloseButton float-right" ng-click="closePush()"></button>
+				</div>
+        <p class="small tip" ng-show="fromDeploy">
+          You can deploy your project to either <a href="https://console.wakanda.io/" target="_blank">Wakanda Cloud</a> or any other platform that uses Git.
+          <br>
+          <br>
+          <a href="http://wakanda.github.io/wakanda-studio/version-control.html#remote" target="_blank">Learn more &raquo;</a>
+        </p>
+				<div>
+					<ul>
+						<li>
+							<label for="remote">Remote repositories</label>
+							<span class="float-right add-remote">Add a remote<a class="btn-addremote" href="#" ng-click="fViewAddRemote()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></span>
+							<select ng-model="remote" ng-options="remote.name for remote in remotes" ng-change="remoteMsg = ''">
+							</select>
+							<span class="alert value">{{remoteMsg}}</span>
+						</li>
+						<li>
+							<label for="localBranch">Local branch</label>
+							<select ng-model="localBranch" ng-options="branch for branch in branches" ng-change="localBranchMsg = ''">
+							</select>
+							<span class="alert value">{{localBranchMsg}}</span>
+						</li>
+						<li>
+							<label for="remoteBranch">Remote branch</label>
+							<input class="ffInput" type="text" id="remoteBranch" ng-model="remoteBranch" ng-change="remoteBranchMsg = ''">
+							<span class="alert value">{{remoteBranchMsg}}</span>
+						</li>
+					</ul>
+				</div>
+        <div class="footer">
+          <button class="ffButton green float-left" ng-click="doPush()" ng-disabled="disablePush"><img src="./app/styles/images/checkmark.png">Push</button>
+          <button class="ffButton transparent float-right" ng-click="closePush()">Cancel</button>
+        </div>
+
+        <span class="alert" id="pushError"></span>
+			</div>
+		</section>
+
+		<!-- PULL -->
+		<section ng-show="pullForm" class="ffForm">
+			<div class="ffContainer">
+				<div class="ffHeader">
+					<span>Pull</span>
+					<button class="ffButton ffCloseButton float-right" ng-click="closePull()"></button>
+				</div>
+				<ul>
+					<li>
+						<label for="remote">Remote repositories</label>
+						<select class="ffSelect" ng-model="remote" ng-options="remote.name for remote in remotes" ng-change="remoteMsg = ''; selectRemoteBranches();">
+						</select>
+						<span class="alert value">{{remoteMsg}}</span>
+					</li>
+					<li>
+						<label for="remoteBranch">Remote branch</label>
+						<select class="ffSelect" ng-model="remoteBranch" ng-options="branch for branch in branches" ng-change="remoteBranchMsg = ''">
+						</select>
+						<span class="alert value">{{remoteBranchMsg}}</span>
+					</li>
+					<li>
+						<label for="localBranch">Local branch</label>
+						<input class="ffInput" type="text" id="localBranch" ng-model="localBranch" disabled>
+					</li>
+				</ul>
+				<div class="footer">
+					<button class="ffButton green float-left" ng-click="doPull()" ng-disabled="disablePull"><img src="./app/styles/images/checkmark.png">Pull</button>
+					<button class="ffButton transparent float-right" ng-click="closePull()">Cancel</button>
+				</div>
+        <span class="alert" id="pullError"></span>
+				</div>
+			</section>
+
 		<!-- Commit -->
 		<section class="area element-title area-commit block">
 			<span class="block area-title">
@@ -109,13 +192,13 @@
 			</span>
 			<div class="line"></div>
 			<div class="fix-input-padding"><textarea id="txtCommitMessage" class="take-all-width" ng-model="commitMessage"></textarea></div>
-			<button id="btnCommit" class="take-all-width ffButton blue float-left clear" ng-click="commit()"><img src="./app/styles/images/checkmark.png"> Commit</button>
+			<button id="btnCommit" class="take-all-width ffButton blue float-left clear" ng-click="commit()" ng-disabled="disableCommit"><img src="./app/styles/images/checkmark.png"> Commit</button>
 			<div class="clear"></div>
 		</section>
-		
+
 		<!-- Stage -->
 		<section class="area area-stage block">
-			
+
 			<!-- Area Barre -->
 			<div class="element element-title block take-all-width">
 				<span class="area-title float-left">
@@ -124,31 +207,31 @@
 				<div class="element-controls float-right">
 					<ul>
 						<li><a class="btn btn-unstage"  ng-click="unstageAll()"></a></li>
-					</ul>		
+					</ul>
 				</div>
 			</div>
 			<div class="line"></div>
-			
+
 			<!-- Nothing to list -->
 			<div class="block take-all-width" ng-show="stage.length===0">
 				No changes were added to the stage
 			</div>
-			
+
 			<!-- Elements list -->
 			<div class="element block take-all-width" ng-repeat="file in stage.slice(0, 100)">
 				<div ng-class="file.class"></div><div  class="filepath" ng-bind="file.path"></div>
 				<div class="element-controls float-right">
 					<ul>
 						<li><a class="btn btn-unstage"  ng-click="unstageFile(file.path)"></a></li>
-					</ul>				
+					</ul>
 				</div>
 			</div>
 			<div class="element block take-all-width more-results" ng-show="stage.length>99">+ {{stage.length-100}} other files</div>
 		</section>
-		
+
 		<!-- Working Directory -->
 		<section class="area area-tree block">
-			
+
 			<!-- Area Barre -->
 			<div class="element element-title block take-all-width">
 				<span class="area-title float-left">
@@ -158,16 +241,16 @@
 					<ul>
 						<li><a class="btn btn-add" ng-click="addAll()"></a></li>
 						<li><a class="btn btn-revert" ng-click="revertAll()"></a></li>
-					</ul>		
+					</ul>
 				</div>
 			</div>
 			<div class="line"></div>
-			
+
 			<!-- Nothing to list -->
 			<div class="block take-all-width" ng-show="workingTree.length===0">
 				No changes in the working directory
 			</div>
-			
+
 			<!-- Elements list -->
 			<div class="element block take-all-width" ng-repeat="file in workingTree.slice(0, 100)">
 				<div ng-class="file.class"></div><div class="filepath" ng-bind="file.path"></div>
@@ -179,9 +262,8 @@
 				</div>
 			</div>
 			<div class="element block take-all-width more-results" ng-show="workingTree.length>99">+ {{workingTree.length-100}} other files</div>
-			
 		</section>
-		
+
 		<!-- Debug -->
 		<section class="area-debug hidden">
 			<p>
@@ -191,6 +273,6 @@
 			<div id="output" class="block">
 			</div>
 		</section>
-	</div>		
+	</div>
 </body>
 </html>

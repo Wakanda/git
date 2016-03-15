@@ -32,7 +32,7 @@ small {
     display: none;
 }
 
-p.small { 
+p.small {
     font-size: 11px;
 }
 
@@ -183,6 +183,14 @@ li > a {
     display: block;
 }
 
+.element.element-title {
+    height: 43px;
+}
+
+.element.element-title .ffButton {
+    margin: 0px;
+}
+
 .element.element-title:hover {
     background-color: transparent;
 }
@@ -193,7 +201,7 @@ li > a {
 
 .element > .element-added {
     background: #535353;
-    width: 4px;    
+    width: 4px;
     height: 4px;
     margin: 10px 6px 0 10px;
     display: block;
@@ -225,8 +233,8 @@ textarea {
     border: 1px solid #dcdcdc;
 }
 
-select, input[type="text"] {
-    padding: 5px 35px 5px 5px;
+select, input[type="text"], input[type="password"] {
+    padding: 5px 5px 5px 5px;
     border: 1px solid #ccc;
     width: 100%;
     display: block;
@@ -236,11 +244,12 @@ select, input[type="text"] {
     border: 1px solid #ccc;
 }
 
-select {   
+select {
+    padding: 5px 35px 5px 5px;
     appearance: none;
     -webkit-appearance: none;
-    -moz-appearance: none;     
-    background: #eee url('./images/selectarrow.png') no-repeat no-repeat center right;
+    -moz-appearance: none;
+    background: transparent url('./images/selectarrow.png') no-repeat no-repeat center right;
     position: relative;
 }
 
@@ -291,11 +300,6 @@ button img {
     line-height: 100%;
 }
 
-.remote_switch {
-    cursor: pointer;
-    padding-top: 5px;
-}
-
 .line {
     clear: both;
 }
@@ -311,7 +315,6 @@ button img {
     text-align: center;
     height: 36px;
     line-height: 36px;
-    margin: 5px 5px 0 0;
     transition: all .15s ease-in;
     font-weight: 400;
 }
@@ -355,6 +358,30 @@ button img {
     width: auto;
     padding: 5px 25px 5px 20px;
     line-height: 100%;
+}
+
+.ffButton:disabled {
+  cursor: default;
+}
+
+.ffButton.green:hover {
+    text-decoration: none;
+    background-color: #4bc4ac;
+    cursor: pointer;
+}
+
+.ffButton.green:disabled {
+  color: white;
+  background-color: #d4d6d7;
+}
+
+.ffButton.blue:disabled {
+  color: white;
+  background-color: #44515e;
+}
+
+.ffButton.transparent:disabled {
+  background-color: #e3e5e6;
 }
 
 .header {
@@ -408,4 +435,293 @@ button img {
 
 .more-results:hover {
     background: transparent;
+}
+
+.btn-dots {
+    width: 14px;
+    height: 14px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    color: black;
+    line-height: 14px;
+}
+
+.ffForm {
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  border-bottom: solid 1px rgb(205, 205, 205);
+}
+
+.ffForm label {
+  display: inline-block;
+  min-width: 145px;
+}
+
+.ffForm .ffContainer {
+    width: 96%;
+    margin: 2%;
+    margin-top: 0%;
+}
+
+.ffForm ul {
+  width: 100%;
+  display: block;
+}
+
+.ffForm li {
+  display: block;
+}
+
+.ffForm .footer {
+  height: 45px;
+}
+
+.alert {
+  color: red;
+  font-size: 11px;
+  font-style: italic;
+  display: block;
+  margin: 5px 0 5px 0;
+  word-wrap: break-word;
+}
+
+.alert.value {
+    margin: -10px 0 20px 0;
+}
+
+.ffForm .ffHeader {
+  height: 36px;
+  padding-top: 10px;
+  letter-spacing: 0.7px;
+  font-size: 12px;
+  text-transform: uppercase;
+  line-height: 120%;
+  font-weight: bold;
+  margin: 0px;
+  color: black;
+}
+
+.ffInput:disabled {
+   background: #dddddd;
+}
+
+/* navigation menu */
+.navigation {
+   font-size: 1em;
+   width: 25px;
+}
+
+.navigation ul {
+   margin: 0px;
+   padding: 0px;
+   width: inherit;
+}
+
+.navigation li {
+   list-style: none;
+}
+
+.navigation a {
+  text-decoration: none;
+}
+
+.navigation ul.top-level li {
+   width: inherit;
+}
+
+.navigation .over-menu {
+    padding-top: 9px;
+    display: none;
+    position: absolute;
+    right: 7px;
+    top: 15px;
+    width: 142px;
+    z-index: 2;
+}
+
+.navigation a {
+   transition: all .5s ease-out 0s;
+   cursor: pointer;
+   display: block;
+   height: 25px;
+   line-height: 25px;
+   text-align: left;
+   text-decoration: none;
+   color: rgb(83, 83, 83);
+   font-family: 'Open Sans', sans-serif;
+   font-size: 13px;
+}
+
+.navigation a.dotBtn {
+   display: inline-block;
+   border-radius: 3px;
+   border: solid 1px rgb(220, 220, 220);
+   height: 16px;
+   line-height: 9px;
+   width: 26px;
+   text-align: center;
+   margin-top: 4px;
+}
+
+.navigation:hover a.dotBtn {
+  transition: all .5s ease-out 0s;
+  background: #f3f3f3;
+}
+
+.navigation .sub-level li:hover {
+  background: #dadada;
+  transition: all .5s ease-out 0s;
+}
+
+.navigation:hover .over-menu {
+  display: block;
+}
+
+.navigation:hover .sub-level {
+  transition: all .5s ease-out 0s;
+  display: block;
+  width: 100%;
+  background: rgb(255, 255, 255);
+  border: solid 1px rgb(220, 220, 220);
+}
+
+.navigation ul.sub-level li {
+  border: none;
+  float: left;
+  width: 140px;
+}
+
+.navigation .sub-level {
+  transition: all .5s ease-out 0s;
+  display: block;
+  width: 100%;
+  background: rgb(255, 255, 255);
+  border: solid 1px rgb(220, 220, 220);
+  overflow: hidden;
+}
+
+.navigation .sub-level a {
+    padding-left: 8px;
+}
+.navigation ul.sub-level {
+    padding: 5px 0 5px 0;
+}
+/* end menu */
+
+.square-list::before {
+  content: '\25AA\00A0\00A0';
+}
+
+.border-bottom {
+    border-bottom: solid 1px #cdcdcd;
+}
+
+.element-list {
+  margin-top: 10px;
+}
+
+.element-list ~ .element-list {
+  margin-top: 0;
+}
+
+.btn-remove {
+  background-image: url(./images/delete.png);
+  opacity: 0.8;
+  background-size: contain;
+  width: 14px;
+  height: 14px;
+}
+
+.btn-edit {
+  background-image: url(./images/edit.png);
+  opacity: 0.5;
+  background-size: contain;
+  width: 11px;
+  height: 11px;
+}
+
+.btn-addremote {
+  background-image: url(./images/add.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  text-decoration: none;
+}
+
+.add-remote {
+  display: inline-block;
+  height: 16px;
+  line-height: 16px;
+}
+
+.ffCloseButton {
+  background-image: url(./images/close.png);
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 16px;
+  padding: 0px;
+}
+
+.area-add-remote .small.tip {
+  margin-right: 10px;
+}
+
+.ffForm .small.tip {
+  margin-bottom: 25px;
+}
+
+.ffForm .no-margin {
+  margin: 0;
+}
+
+.area-notgit .ffButton.blue {
+  margin: 10px;
+}
+
+.alert-title {
+  color: red;
+  font-style: italic;
+}
+
+.notif {
+  border: 1px solid rgb(205, 205, 205);
+  border-radius: 4px;
+  border-color: #9da9b3;
+  background-color: #d7dde3;
+  font-size: 11px;
+  color:  #183d5e;
+
+  position: fixed;
+  right: 4px;
+  width: 170px;
+  min-height: 60px;
+  margin: 6px 0 0 0;
+  z-index: 999999;
+
+  -webkit-transition: all 1s ease, opacity 500ms ease .5s;
+  transition: all 1s ease, opacity 500ms ease .5s;
+  opacity: 0;
+  display: none;
+}
+
+.notif p {
+  padding: 10px 10px 0 10px;
+  text-align: left;
+  margin: 0;
+  line-height: 18px;
+}
+
+.notif a {
+  padding: 0 10px 10px 10px;
+  display: block;
+}
+
+.notif .ffCloseButton {
+  background: url(./images/close_blue.png) no-repeat 5px center;
+  background-color: inherit;
+  border-radius: 5px;
+}
+
+.deploy-remote .element-title {
+  padding-left: 10px;
 }

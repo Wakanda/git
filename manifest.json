@@ -1,9 +1,18 @@
 {
 	"extension": {
 		"name": "git",
-		"version": "1.0.0",
+		"version": "1.1.0",
+    "minStudioVersion": "1.1.0",
 		"description": "Git integration",
 		"icon": "icon.png",
+		"senders": [
+				{
+						"location": "studioToolbar",
+						"actionName": "deploy",
+						"icon": "deploy.png",
+						"alternateIcon": "deploy_alt.png"
+				}
+		],
 		"actions": [
 			{
 				"name"    : "open",
@@ -13,12 +22,37 @@
 				"name": "status",
 				"title": "status"
 			},
-            {
-                "name": "initPreferences",
-                "title": "initPreferences",
-                "trigger": [ { "event": "onStudioStart" } ]
-            }
+			{
+				"name": "initPreferences",
+				"title": "initPreferences",
+				"trigger": [ { "event": "onStudioStart" } ]
+			},
+			{
+					"name": "studioStartHandler",
+					"title": "studio start handler",
+					"trigger": [
+							{ "event": "onStudioStart" }
+					]
+			},
+			{
+					"name": "solutionOpenedHandler",
+					"title": "solution opened handler",
+					"trigger": [
+							{ "event": "onSolutionOpened" }
+					]
+			},
+			{
+					"name": "solutionClosedHandler",
+					"title": "solution closed handler",
+					"trigger": [
+							{ "event": "onSolutionClosed" }
+					]
+			},
+			{
+				"name"    : "deploy",
+				"title"   : "Deploy"
+			}
 		],
 		"lifetime": "application_lifetime"
-	}	
+	}
 }

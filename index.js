@@ -1,25 +1,28 @@
 var Git         = {};
 var shellWorker = require("shellWorker");
 var commands    = {
-	"init"         : "init", //added to UI
-	"commit"       : 'commit -m "{{message}}"', //added to UI
-	"addFile"      : 'add "{{file}}"', //added to UI
-	"revertFile"   : 'checkout "{{file}}"', //added to UI
-	"revertAll"    : 'checkout --force', //added to UI
-	"unstageFile"  : 'reset -- "{{file}}"', //added to UI
-	"unstageAll"   : 'reset', //added to UI
-	"addAll"       : "add -A", //added to UI
-	"push"         : 'push "{{remote}}" {{localBranch}}:{{remoteBranch}}', //added to UI
-	"pull"         : 'pull "{{remote}}" {{remoteBranch}}:{{localBranch}}', //added to UI
-	"getRemotes"   : "remote -v", //added to UI
-	"addRemote"    : 'remote add "{{remote}}" "{{url}}"', //added to UI
-	"renameRemote" : 'remote rename "{{oldName}}" "{{newName}}"',
-	"removeRemote" : 'remote rm "{{remote}}"', //added to UI
-	"status"       : "status --porcelain -z", //added to UI
-	"getBranches"  : "branch --no-color",
-	"createBranch" : 'checkout -b "{{branch}}"',
-	"changeBranch" : 'checkout "{{branch}}"',
-	"deleteBranch" : 'branch -d "{{branch}}"'
+	"init"              : "init", //added to UI
+	"commit"            : 'commit -m "{{message}}"', //added to UI
+	"addFile"           : 'add "{{file}}"', //added to UI
+	"revertFile"        : 'checkout "{{file}}"', //added to UI
+	"revertAll"         : 'checkout --force', //added to UI
+	"unstageFile"       : 'reset -- "{{file}}"', //added to UI
+	"unstageAll"        : 'reset', //added to UI
+	"addAll"            : "add -A", //added to UI
+	"push"              : 'push "{{remote}}" "{{localBranch}}:{{remoteBranch}}"', //added to UI
+	"pull"              : 'pull "{{remote}}" "{{remoteBranch}}:{{localBranch}}"', //added to UI
+	"getRemotes"        : "remote -v", //added to UI
+	"addRemote"         : 'remote add "{{remote}}" "{{url}}"', //added to UI
+	"renameRemote"      : 'remote rename "{{oldName}}" "{{newName}}"',
+	"updateRemoteUrl"   : 'remote set-url "{{remote}}" "{{url}}"',
+	"removeRemote"      : 'remote rm "{{remote}}"', //added to UI
+	"status"            : "status --porcelain -z", //added to UI
+	"getBranches"       : "branch --no-color",
+	"createBranch"      : 'checkout -b "{{branch}}"',
+	"changeBranch"      : 'checkout "{{branch}}"',
+	"deleteBranch"      : 'branch -d "{{branch}}"',
+	"checkBranchName"   : 'check-ref-format --branch "{{branch}}"',
+	"getRemoteBranches" : 'branch --no-color -r'
 };
 var sync       = false;
 var errors     = {
@@ -104,7 +107,8 @@ Git.runGitAction = function(options){
 		}
 		
 		response.data  = dataResponse;
-		
+        response.isError = isError;
+
 		logCommandOutput({
 			error : isError,
 			action : options.action,
@@ -400,6 +404,22 @@ Git.renameRemote = function(params){
 	return result;
 };
 
+Git.updateRemoteUrl = function(params){
+	if(!isGitRepository()){
+		return errorMessage("NOTGIT");
+	}
+
+	var result = Git.runGitAction({
+		"action" : "updateRemoteUrl",
+		"params" : {
+			"remote" : params.remote,
+			"url" : params.url
+		}
+	});
+
+	return result;
+};
+
 Git.removeRemote = function(params){
 	if(!isGitRepository()){
 		return errorMessage("NOTGIT");
@@ -435,13 +455,32 @@ Git.clone = function(params){
  * Studio Actions
  */
 
-Git.open = function(){
-	if(!workingDirectory){
+Git.open = function(params) {
+	if(! workingDirectory) {
 		studio.alert("No solution is open");
 		return;
 	}
-	studio.extension.openPageInTab('./index.html', 'Git', true, "side");
-}
+
+	studio.extension.openPageInTab('./index.html', 'Git', false, "side", false, '', params && params.urlParams ? params.urlParams : undefined);
+};
+
+Git.deploy = function() {
+  // current extension path
+  var path = studio.extension.getFolder().path;
+  path += path.slice(-1) === '/' ? '' : '/';
+  
+  // check if this extension is opened
+  var opened = (studio.getTabsList() || []).some(function(elm) {
+    return elm.path === path + 'index.html';
+  });
+  
+  if(opened) {
+    Git.open();
+    studio.sendExtensionWebZoneCommand('git', 'viewDeploy');
+  } else {
+    Git.open({ urlParams: 'fromDeploy=true' });
+  }
+};
 
 Git.initPreferences = function(){
 	studio.extension.registerPreferencePanel('GIT', 'preferences.html', 400);
@@ -450,6 +489,50 @@ Git.initPreferences = function(){
 
 Git.refreshPath = function(){
 	gitPath = getGitPath();
+};
+
+Git.checkBranchName = function(params){
+	if(!isGitRepository()){
+		return errorMessage("NOTGIT");
+	}
+
+	var result = Git.runGitAction({
+		"action" : "checkBranchName",
+		"params" : {
+			"branch" : params.branch
+		}
+	});
+
+	return result;
+};
+
+Git.getRemoteBranches = function(params){
+	if(!isGitRepository()){
+		return errorMessage("NOTGIT");
+	}
+
+	var result = Git.runGitAction({
+		"action" : "getRemoteBranches"
+	});
+
+	if(!params || typeof params.async === "undefined"){
+		sync = true;
+		wait(2000);
+	}
+
+	return result;
+};
+
+Git.solutionOpenedHandler = function() {
+	studio.setActionEnabled('deploy', true);
+};
+
+Git.solutionClosedHandler = function() {
+	studio.setActionEnabled('deploy', false);
+};
+
+Git.studioStartHandler = function() {
+	studio.setActionEnabled('deploy', false);
 };
 
 /*
@@ -525,7 +608,7 @@ function replacePatterns(template, list)
 	});
 
 	return output;
-};
+}
 
 function replacePattern(template, variable, value)
 {
@@ -603,17 +686,19 @@ actionsParsers.status = function(data, params){
 actionsParsers.getRemotes = function(data){	
 	var remotes    = {};
 	var lines      = data.split("\n");
-	
+
+  //format remotename url (push|fetch)
+  var regex = /^([^\t]+)\t(.+) \((.+)\)$/;
 	lines.forEach(function(line){
 		if(line.match(/^[\s\r\n]*$/)){
 			return;
 		}
-		var parts = line.split(/\s+/);
-		
-		var name    = parts[0];
-		var url     = parts[1];
-		var purpose = parts[2].replace(/[\(\)]+/g, "");
-		
+
+    var parts = regex.exec(line);
+    var name = parts[1];
+    var url = parts[2];
+    var purpose = parts[3];
+
 		remotes[name] = remotes[name] || {};
 		
 		remotes[name][purpose] = url;		
@@ -622,7 +707,7 @@ actionsParsers.getRemotes = function(data){
 	return remotes;
 };
 
-actionsParsers.getBranches = function(data){
+actionsParsers.getRemoteBranches = actionsParsers.getBranches = function(data){
 	var result = {};
 	result.branches = [];
 	
