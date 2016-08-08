@@ -58,7 +58,7 @@
 			</div>
 
 			<!-- Add/Update Remote -->
-      <div ng-class="{'block take-all-width are-add-remote': true, 'border-bottom': remotes.length}" ng-show="remoteForm">
+			<div ng-class="{'block take-all-width are-add-remote': true, 'border-bottom': remotes.length}" ng-show="remoteForm">
 				<div class="block take-all-width">
 					<span class="label block">Name </span>
 					<input type="text" id="addRemoteFirstInput" ng-model="newRemoteName" ng-change="newRemoteNameMsg=''"/>
@@ -87,7 +87,7 @@
 				<button class="ffButton transparent float-right" ng-click="closeRemote()" ng-disabled="disableRemote">Cancel</button>
 				<div class="clear"></div>
 				<br>
-        <span class="alert" id="remoteError"></span>
+				<span class="alert" id="remoteError"></span>
 			</div>
 			<!-- Nothing to list -->
 			<div class="block take-all-width"  hidden ng-show="noRemotes && remoteList && !remoteForm">
@@ -115,12 +115,12 @@
 					<span>Push</span>
 					<button class="ffButton ffCloseButton float-right" ng-click="closePush()"></button>
 				</div>
-        <p class="small tip" ng-show="fromDeploy">
-          You can deploy your project to either <a href="https://console.wakanda.io/" target="_blank">Wakanda Cloud</a> or any other platform that uses Git.
-          <br>
-          <br>
-          <a href="http://wakanda.github.io/wakanda-studio/version-control.html#remote" target="_blank">Learn more &raquo;</a>
-        </p>
+				<p class="small tip" ng-show="fromDeploy">
+				  You can deploy your project to either <a href="https://console.wakanda.io/" target="_blank">Wakanda Cloud</a> or any other platform that uses Git.
+				  <br>
+				  <br>
+				  <a href="http://wakanda.github.io/wakanda-studio/version-control.html#remote" target="_blank">Learn more &raquo;</a>
+				</p>
 				<div>
 					<ul>
 						<li>
@@ -181,7 +181,7 @@
 					<button class="ffButton green float-left" ng-click="doPull()" ng-disabled="disablePull"><img src="./app/styles/images/checkmark.png">Pull</button>
 					<button class="ffButton transparent float-right" ng-click="closePull()">Cancel</button>
 				</div>
-        <span class="alert" id="pullError"></span>
+				<span class="alert" id="pullError"></span>
 				</div>
 			</section>
 
@@ -200,7 +200,7 @@
 		<section class="area area-stage block">
 
 			<!-- Area Barre -->
-			<div class="element element-title block take-all-width">
+			<div class="element block take-all-width">
 				<span class="area-title float-left">
 					Staged Changes
 				</span>
@@ -213,13 +213,13 @@
 			<div class="line"></div>
 
 			<!-- Nothing to list -->
-			<div class="block take-all-width" ng-show="stage.length===0">
+			<div class="element-empty block take-all-width" ng-show="stage.length===0">
 				No changes were added to the stage
 			</div>
 
 			<!-- Elements list -->
-			<div class="element block take-all-width" ng-repeat="file in stage.slice(0, 100)">
-				<div ng-class="file.class"></div><div  class="filepath" ng-bind="file.path"></div>
+			<div class="element block take-all-width" ng-repeat="file in stage | limitTo: 100">
+				<div  class="filepath" ng-bind="file.path"></div>
 				<div class="element-controls float-right">
 					<ul>
 						<li><a class="btn btn-unstage"  ng-click="unstageFile(file.path)"></a></li>
@@ -230,12 +230,11 @@
 		</section>
 
 		<!-- Working Directory -->
+		<!-- Modified Files -->
 		<section class="area area-tree block">
-
-			<!-- Area Barre -->
-			<div class="element element-title block take-all-width">
+			<div class="element block take-all-width">
 				<span class="area-title float-left">
-					Changes
+					Unstaged changes
 				</span>
 				<div class="element-controls float-right">
 					<ul>
@@ -244,16 +243,18 @@
 					</ul>
 				</div>
 			</div>
+
+			<!-- Area Barre -->
+			<div class="element-empty block take-all-width">
+				<span class="area-title area-title__sub-title float-left">
+					Modified files
+				</span>
+			</div>
 			<div class="line"></div>
 
-			<!-- Nothing to list -->
-			<div class="block take-all-width" ng-show="workingTree.length===0">
-				No changes in the working directory
-			</div>
-
 			<!-- Elements list -->
-			<div class="element block take-all-width" ng-repeat="file in workingTree.slice(0, 100)">
-				<div ng-class="file.class"></div><div class="filepath" ng-bind="file.path"></div>
+			<div class="element block take-all-width" ng-repeat="file in workingTree | filter: { class: 'element-modified' } | limitTo: 100 as results">
+				<div class="filepath" ng-bind="file.path"></div>
 				<div class="element-controls float-right">
 					<ul>
 						<li><a class="btn btn-add" ng-click="addFile(file.path)"></a></li>
@@ -261,7 +262,36 @@
 					</ul>
 				</div>
 			</div>
-			<div class="element block take-all-width more-results" ng-show="workingTree.length>99">+ {{workingTree.length-100}} other files</div>
+			<div class="element block take-all-width more-results" ng-show="(workingTree | filter: { class: 'element-modified' }).length>99">+ {{(workingTree | filter: { class: 'element-modified' }).length-100}} other files</div>
+			
+			<!-- Nothing to list -->
+			<div class="element-empty block take-all-width" ng-show="(workingTree | filter: { class: 'element-modified' }).length < 1">
+				No changes in the working directory
+			</div>
+			<br>
+			<div class="element-empty block take-all-width">
+				<span class="area-title area-title__sub-title float-left">
+					Untracked files
+				</span>
+			</div>
+			<div class="line"></div>
+
+			<!-- Elements list -->
+			<div class="element block take-all-width" ng-repeat="file in workingTree | filter: { class: 'element-added' } | limitTo: 100 as results">
+				<div class="filepath" ng-bind="file.path"></div>
+				<div class="element-controls float-right">
+					<ul>
+						<li><a class="btn btn-add" ng-click="addFile(file.path)"></a></li>
+						<li><a class="btn btn-revert" ng-click="revertFile(file.path)"></a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="element block take-all-width more-results" ng-show="(workingTree | filter: { class: 'element-added' }).length>99">+ {{(workingTree | filter: { class: 'element-added' }).length-100}} other files</div>
+
+			<!-- Nothing to list -->
+			<div class="element-empty block take-all-width" ng-show="(workingTree | filter: { class: 'element-added' }).length < 1">
+				No new files in the working directory
+			</div>
 		</section>
 
 		<!-- Debug -->

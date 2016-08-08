@@ -43,6 +43,11 @@ p.small {
     height: 25px;
 }
 
+.element-empty {
+    line-height: 25px;
+    height: 25px;
+}
+
 .element > div {
     display: inline-block;
     margin-right: 10px;
@@ -282,6 +287,10 @@ button img {
     font-weight: bold;
     margin: 5px 0;
     color: black;
+}
+
+.area-title__sub-title {
+    font-weight: normal;
 }
 
 .area-remotes {
